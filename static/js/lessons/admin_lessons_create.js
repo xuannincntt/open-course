@@ -4,7 +4,8 @@ const courseSelect = document.getElementById("courseId");
 const addLessonForm = document.getElementsByClassName("add-lesson-form")[0];
 const lessonVideoPreview = document.getElementById("lesson-video-preview");
 const lessonVideoInput = document.getElementById("lessonVideo");
-
+const lessonYoutubePreview = document.getElementById("lesson-youtube-preview");
+const lessonYoutubeInput= document.getElementById("lessonYoutube");
 
 document.addEventListener("DOMContentLoaded", async () => {
     let courses;
@@ -38,6 +39,8 @@ addLessonForm.addEventListener('submit', (e) => {
     formData.append('lessonName',addLessonForm.elements['lessonName'].value);
     formData.append('lessonContent',addLessonForm.elements['lessonContent'].value);
     formData.append('lessonVideo',addLessonForm.elements['lessonVideo'].files[0]);
+    formData.append('lessonYoutube',addLessonForm.elements['lessonYoutube'].value);
+
 
     fetch('/api/admin/lessons/new', {
         method: 'POST',
@@ -60,5 +63,12 @@ lessonVideoInput.addEventListener("change", () => {
       const url = URL.createObjectURL(file);
       lessonVideoPreview.src = url;
       lessonVideoPreview.style.display = "block";
+      lessonYoutubeInput.disabled=true;
     }
   });
+
+lessonYoutubeInput.addEventListener("input", (e) => {
+    console.log(e.target.value);
+    lessonYoutubePreview.src = e.target.value;
+    lessonVideoInput.disabled=true;
+});

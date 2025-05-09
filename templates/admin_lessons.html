@@ -18,14 +18,49 @@
         
     </div>
     <div class="lessons-content">
-        <div class="lessons-content-filter"></div>
+        <div class="lessons-content-search">
+            <div id="lessons-content-searchBar">
+                <label for="searchTerm" class="search-label">
+                    <i class='bx bx-search search-icon'></i>
+                    <input type="text" class="field-input" name="searchTerm" id="searchTerm" placeholder="Nhập tên bài học"/>
+                </label>
+            </div>
+            <form id="lessons-content-sortForm" method="POST">
+                <div class="sort-field">
+                    <label for="sortCriteria" class="sort-label">
+                        <span class="sort-name">Sort By</span>
+                        <select class="field-input select-input" name="sortCriteria" id="sortCriteria" defaultValue="created_at">
+                            <option value="created_at">Date Created</option>
+                            <option value="name">Lesson Name</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="sort-field">
+                    <label for="sortAsc" class="sort-label">
+                        <i class='bx bx-sort-a-z sort-icon' ></i>
+                        <input type="radio" class="field-input" name="sortOrder" id="sortAsc" value="asc" />
+                    </label>
+                    <label for="sortDesc" class="sort-label">
+                        <i class='bx bx-sort-z-a sort-icon' ></i>
+                        <input type="radio" class="field-input" name="sortOrder" id="sortDesc" value="desc"/>
+                    </label>
+                </div>
+                <div class="sort-submit">
+                    <button type="submit" class="sort-btn">
+                        <i class='bx bx-sort-alt-2 sort-icon'></i>
+                        Sort
+                    </button>
+                </div>
+            </form>
+        </div>
         <table class="lessons-content-table">
             <thead>
                 <tr class="lessons-table-head">
                     <th class="align-left">No.</th>
                     <th class="align-left">Lesson Name</th>
+                    <th class="align-left">Course</th>
                     <th class="align-left">Lesson Content</th>
-                    <th class="align-center">Date Updated</th>
+                    <th class="align-center">Date Created</th>
                     <th class="align-center">Action</th>
                 </tr>
             </thead>

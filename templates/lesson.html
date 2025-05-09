@@ -141,6 +141,7 @@
         <!-- design embedding youtube video -->
         <div class="left">
             <iframe id="videoFrame" src="https://www.youtube.com/embed/0SJE9dYdpps" frameborder="0" allowfullscreen></iframe>
+            <video src="" id="video" controls></video>
             <h2 id="lessonTitle">ReactJS là gì?</h2>
             <p id="lessonDesc">Giới thiệu tổng quan về ReactJS và lý do nên học.</p>
         </div>
@@ -150,7 +151,10 @@
             <div class="name-lesson"
                  data-video-id="{{ lesson.video_url.split('v=')[-1] }}"
                  data-title="{{ lesson.name }}"
-                 data-desc="{{ lesson.content }}">
+                 data-desc="{{ lesson.content }}"
+                 data-userId="{{ userId }}"
+                 data-courseId="{{ course.id }}"
+                 data-lesson-id="{{ lesson.id }}">
                 {{ loop.index }}. {{ lesson.name }}
             </div>
             {% endfor %}

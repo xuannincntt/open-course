@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let data = await response.json();
             if (data.success) {
                 document.getElementById("account").innerText = data.account;
-                document.getElementById("role").innerText = (data.role == "TEACHER") ? "Giáo viên" : "Học viên"; 
+                document.getElementById("role").innerText = (data.role == "TEACHER" || data.role == "ADMIN") ? (data.role=="ADMIN"? "Quản trị viên": "Giáo viên") : "Học viên"; 
                 document.getElementById("time").innerText = data.time;
                 const container = document.querySelector(".register-container");
                 container.innerHTML = ""; // Xóa dữ liệu cũ
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             let result = await response.json();
             if (result.success) {
-                if (result.role === "TEACHER") {
+                if (result.role === "TEACHER" || result.role === "ADMIN") {
                     window.location.href = "/admin";
                 } else {
                     location.reload();

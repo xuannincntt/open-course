@@ -1,13 +1,16 @@
-import { shortenText } from "./utils.js";
+import { debounce, shortenText, sortList } from "./utils.js";
 
 const lessonsTableBody = document.getElementById("lessons-table-body");
 const backdropContainer = document.getElementById("backdrop");
 const backdropModal = document.getElementById("modal");
+const lessonSortForm = document.getElementById("lessons-content-sortForm");
+const searchInput = document.getElementById("searchTerm");
 let lessonTableRows;
+let lessons;
+let filteredLessons = [];
 
 document.addEventListener("DOMContentLoaded", async () => {
-    let lessonsRow = ``;
-
+    
     await fetch("/api/admin/lessons", {
         method: 'GET'
     })
@@ -17,39 +20,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         return data.lessons
     })
     .then(lessonsData => {
-        lessonsData.forEach((lesson,index) => {
-            const lessonRow = `<tr class="lessons-table-data" data-index="${index}" id="lessonId-${lesson.id}">
-                    <td class="align-left">${index+1}</td>
-                    <td class="align-left">${shortenText(lesson.name, 40)}</td>
-                    <td class="align-left">${lesson.content}</td>
-                    <td class="align-center">${new Date(lesson.created_at).toLocaleDateString()}</td>
-                    <td class="align-center">
-                        <a href="/admin/lessons/update/${lesson.id}" class="lesson-edit-btn">
-                            <i class='bx bx-pencil edit-icon'></i>
-                        </a>
-                        <button type="button" class="lesson-delete-btn">
-                            <i class="bx bx-trash delete-icon"></i>
-                        </button>
-                    </td>
-                </tr>`;
-
-            lessonsRow += lessonRow;
-        });
-
-        
-        lessonsTableBody.innerHTML = lessonsRow;
-
-        lessonTableRows = lessonsTableBody.childNodes;
-
-        handleLessonClick();
-
-        handleLessonDeleteBtns();
+        lessons = [...lessonsData];
+        updateLessonsTable();
     })
     .catch((err) => {
         console.log(err);
     }); 
     
 });
+
+const handleSearchInput = async (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    if (!searchTerm || searchTerm.length == 0){
+        filteredLessons = [];
+    }
+    filteredLessons = lessons.filter(lesson => {
+            return (lesson.name.toLowerCase().includes(searchTerm)) ||
+            (lesson.content.toLowerCase().includes(searchTerm))
+        });
+    
+    console.log(filteredLessons);
+    try {
+        if (filteredLessons.length <= 0) {
+            const response = await fetch("/api/admin/lessons/search?searchTerm="+searchTerm,{
+            method: "GET"
+            });
+            const data = await response.json();
+            filteredLessons = data.lessons;
+            console.log(lessons);
+        }
+        
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+    updateLessonsTable();
+};
 
 const handleLessonDeleteBtns = () => {
     const lessonDeleteBtns = document.querySelectorAll(".lesson-delete-btn");
@@ -118,4 +124,54 @@ const handleLessonConfirmBtns = () => {
         .catch(err => console.error(err));
     });
 };
+
+const updateLessonsTable = () => {
+    let displayedLessons = lessons;
+    if (filteredLessons.length > 0){
+        displayedLessons = filteredLessons;
+    }
+    let lessonsRow = ``;
+    displayedLessons.forEach((lesson,index) => {
+            const lessonRow = `<tr class="lessons-table-data" data-index="${index}" id="lessonId-${lesson.id}">
+                    <td class="align-left">${index+1}</td>
+                    <td class="align-left">${shortenText(lesson.name, 35)}</td>
+                    <td class="align-left">${shortenText(lesson.courseName, 30)}</td>
+                    <td class="align-left">${shortenText(lesson.content, 30)}</td>
+                    <td class="align-center">${new Date(lesson.created_at).toLocaleDateString()}</td>
+                    <td class="align-center">
+                        <a href="/admin/lessons/update/${lesson.id}" class="lesson-edit-btn">
+                            <i class='bx bx-pencil edit-icon'></i>
+                        </a>
+                        <button type="button" class="lesson-delete-btn">
+                            <i class="bx bx-trash delete-icon"></i>
+                        </button>
+                    </td>
+                </tr>`;
+
+            lessonsRow += lessonRow;
+        });
+
+        
+        lessonsTableBody.innerHTML = lessonsRow;
+
+        lessonTableRows = lessonsTableBody.childNodes;
+
+        handleLessonClick();
+
+        handleLessonDeleteBtns();
+};
+
+const debouncedSearch = debounce(handleSearchInput, 200);
+
+searchInput.addEventListener("input", debouncedSearch);
+
+lessonSortForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    
+    const sortCriteria = lessonSortForm.elements["sortCriteria"].value || "";
+    const sortOrder = lessonSortForm.elements["sortOrder"].value || "";
+    console.log(sortCriteria, sortOrder);
+    lessons = sortList(lessons, sortCriteria, sortOrder);
+    updateLessonsTable();
+});
 

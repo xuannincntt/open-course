@@ -18,7 +18,41 @@
         
     </div>
     <div class="courses-content">
-        <div class="courses-content-filter"></div>
+        <div class="courses-content-search">
+            <div id="courses-content-searchBar">
+                <label for="searchTerm" class="search-label">
+                    <i class='bx bx-search search-icon'></i>
+                    <input type="text" class="field-input" name="searchTerm" id="searchTerm" placeholder="Nhập tên khóa học"/>
+                </label>
+            </div>
+            <form id="courses-content-sortForm" method="POST">
+                <div class="sort-field">
+                    <label for="sortCriteria" class="sort-label">
+                        <span class="sort-name">Sort By</span>
+                        <select class="field-input select-input" name="sortCriteria" id="sortCriteria" defaultValue="created_at">
+                            <option value="created_at">Date Created</option>
+                            <option value="name">Course Name</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="sort-field">
+                    <label for="sortAsc" class="sort-label">
+                        <i class='bx bx-sort-a-z sort-icon' ></i>
+                        <input type="radio" class="field-input" name="sortOrder" id="sortAsc" value="asc" />
+                    </label>
+                    <label for="sortDesc" class="sort-label">
+                        <i class='bx bx-sort-z-a sort-icon' ></i>
+                        <input type="radio" class="field-input" name="sortOrder" id="sortDesc" value="desc"/>
+                    </label>
+                </div>
+                <div class="sort-submit">
+                    <button type="submit" class="sort-btn">
+                        <i class='bx bx-sort-alt-2 sort-icon'></i>
+                        Sort
+                    </button>
+                </div>
+            </form>
+        </div>
         <table class="courses-content-table">
             <thead>
                 <tr class="courses-table-head">
@@ -38,5 +72,5 @@
 </div>
 {% endblock %}
 {%block javascript%}
-<script src="{{url_for('static',filename="js/admin_courses.js")}}"></script>
+<script type="module" src="{{url_for('static',filename="js/admin_courses.js")}}"></script>
 {%endblock%}

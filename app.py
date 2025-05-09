@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, jsonify, make_respon
 import requests
 import secrets
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import or_, and_
 from flask_migrate import Migrate
 import cloudinary
 import cloudinary.uploader
@@ -86,7 +87,7 @@ def course():
     # Tìm khóa học theo keyword (nếu có)
     query = Course.query
     if keyword:
-        query = query.filter(Course.name.ilike(f"%{keyword}%"))
+        query = query.filter(Course.name.ilike(f"%{keyword}%"), Course.status=="Published")
     courses = query.all()
     course_list = []
     for course in courses:
@@ -181,7 +182,12 @@ def account_api(username):
     user = User.query.filter_by(name=username).first()
     enrollments = Enrollment.query.filter_by(user_id=user.id).all()
     course_list = []
+    added_course_ids = set() 
+
     for enrollment in enrollments:
+        if enrollment.course_id in added_course_ids:
+            continue  # bỏ qua nếu đã thêm rồi
+
         course = Course.query.filter_by(id=enrollment.course_id).first()
         if course:
             teacher = User.query.filter_by(id=course.teacher_id).first()
@@ -194,6 +200,8 @@ def account_api(username):
                 "teacher_name": teacher.name if teacher else "Unknown",
                 "teacher_avatar": teacher.avatar if teacher else ""
             })
+            added_course_ids.add(course.id) 
+
     return jsonify({
         "success": True,
         "username": user.name,
@@ -207,6 +215,7 @@ def enroll_course():
     data = request.get_json()
     username = data.get("username")
     course_name = data.get("course_name")
+    print(course_name)
     # Tìm user và khóa học
     user = User.query.filter_by(name=username).first()
     course = Course.query.filter_by(name=course_name).first()
@@ -217,7 +226,8 @@ def enroll_course():
     if existing:
         return jsonify({"success": True, "message": "Bạn đã đăng ký khóa học này rồi."}), 400
     # Tạo mới bản ghi
-    new_enrollment = Enrollment(user_id=user.id, course_id=course.id, lesson_id=1)
+    lesson = Lesson.query.filter_by(course_id=course.id).first()
+    new_enrollment = Enrollment(user_id=user.id, course_id=course.id, lesson_id=lesson.id)
     db.session.add(new_enrollment)
     course.number_of_students += 1  # cập nhật số học viên
     db.session.commit()
@@ -358,6 +368,9 @@ def teacher_api():
     return jsonify({"teacher_list": teacher_list, "branch_list": category_names})
 @app.route("/lesson/<course_name>")
 def lesson(course_name):
+    username = request.cookies.get("username")
+    user = User.query.filter_by(name=username).first()
+    user_id = user.id
     # Chuyển tên từ URL slug về tên gốc (ví dụ JavaScript-cơ-bản → JavaScript cơ bản)
     course_name_clean = course_name.replace("-", " ")
     # Tìm khóa học
@@ -377,8 +390,24 @@ def lesson(course_name):
         username=username,
         avatar=avatar_url,
         course=course,
+        userId=user_id,
         lessons=lessons
     )
+@app.route('/enroll_lesson', methods=['POST'])
+def enroll_lesson():
+    user_id = request.json.get('user_id')
+    course_id = request.json.get('course_id')
+    lesson_id = request.json.get('lesson_id')
+
+    # Kiểm tra đã tồn tại chưa
+    enrollment = Enrollment.query.filter_by(user_id=user_id, course_id=course_id, lesson_id=lesson_id).first()
+    if not enrollment:
+        enrollment = Enrollment(user_id=user_id, course_id=course_id, lesson_id=lesson_id)
+        db.session.add(enrollment)
+        db.session.commit()
+        return jsonify({'message': 'Enrollment added'})
+    else:
+        return jsonify({'message': 'Enrollment already exists'})
 @app.route("/contact")
 def contact():
     username = request.cookies.get("username")
@@ -414,6 +443,7 @@ def admin():
 def courses_page(): 
     username = request.cookies.get("username")
     return render_template("admin_courses.html", username=username)
+
 @app.route("/admin/courses/<int:id>", methods=["GET"])
 def detail_course_page(id):
     username = request.cookies.get("username")
@@ -467,13 +497,50 @@ def get_courses():
             }), 404
         courses_dict = [course.to_dict() for course in courses]
         return jsonify({
-            "courses": courses_dict
+            "courses": courses_dict,
+            "userRole": user.role
         }), 200
     except SQLAlchemyError as e:
         print("Error getting courses:", e)
         return jsonify({
             "message": "There was an error getting courses. Try again later."
         }), 500
+    
+@app.route("/api/admin/courses/search", methods=['GET'])
+def search_courses():
+    search_term = request.args.get("searchTerm","")
+    user_id = request.cookies.get("user_id", "")
+    user = User.query.get_or_404(user_id)
+    if not user or user.role not in ["TEACHER","ADMIN"]:
+        return jsonify({
+            "message": "Unauthorized access"
+        }), 400
+    courses = []
+    if user.role == "TEACHER":
+        courses = Course.query.filter(
+            and_(
+                or_(
+                    Course.name.ilike(f"%{search_term}%"),
+                    Course.description.ilike(f"%{search_term}%")
+                ),
+                Course.teacher_id==user.id
+            )
+        ).all()
+    else:
+        courses = Course.query.filter(
+            or_(
+                Course.name.ilike(f"%{search_term}%"),
+                Course.description.ilike(f"%{search_term}%")
+            )
+        ).all()
+
+    course_dict = [course.to_dict() for course in courses if courses]
+
+    return jsonify({
+        "courses": course_dict,
+        "userRole": user.role
+    }), 200
+
 @app.route("/api/admin/courses/<int:id>", methods=["GET"])
 def get_course_by_id(id):
     user_id = request.cookies.get("user_id", "")
@@ -535,7 +602,8 @@ def add_course():
             category_id=category_id,
             level=new_course_data["level"],
             description=new_course_data["description"],
-            teacher_id=user_id
+            teacher_id=user_id,
+            status="Pending"
         )
         for i in range(1, int(new_course_data["number_of_lessons"])+1):
             lesson_name = request.form.get(f'lessons[{i}][name]')
@@ -569,6 +637,62 @@ def add_course():
     return jsonify({
         "message": "Undefined route"
     }), 404
+
+@app.route("/api/admin/courses/approve/<int:id>", methods=["POST"])
+def approve_course(id):
+    user_id = request.cookies.get("user_id", "") 
+
+    user = User.query.get_or_404(user_id)
+    if not user or user.role != "ADMIN":
+        return jsonify({
+            "message": "Unauthorized access"
+        }), 400
+
+    selected_course = Course.query.get_or_404(id)
+    if not selected_course: 
+        return jsonify({
+            "message": "Course not found."
+        })
+
+    try:
+        selected_course.status="Published"
+        db.session.commit()
+        return jsonify({
+            "message": "Course approved successfully."
+        }), 200
+    except SQLAlchemyError as e:
+        return jsonify({
+            "message": "There was an error updating course. Try again later."
+        }), 500
+
+@app.route("/api/admin/courses/deny/<int:id>", methods=["POST"])
+def deny_course(id):
+    user_id = request.cookies.get("user_id", "") 
+
+    user = User.query.get_or_404(user_id)
+    if not user or user.role != "ADMIN":
+        return jsonify({
+            "message": "Unauthorized access"
+        }), 400
+
+    selected_course = Course.query.get_or_404(id)
+    if not selected_course: 
+        return jsonify({
+            "message": "Course not found."
+        })
+
+    try:
+        selected_course.status="Denied"
+        db.session.commit()
+
+        return jsonify({
+            "message": "Course denied successfully."
+        }), 200
+    except SQLAlchemyError as e:
+        return jsonify({
+            "message": "There was an error updating course. Try again later."
+        }), 500
+
 @app.route("/api/admin/courses/update/<int:id>", methods=["PUT"])
 def update_course(id):
     user_id = request.cookies.get("user_id", "") # giả sử user id 2 là teacher
@@ -589,7 +713,8 @@ def update_course(id):
         "number_of_lessons": request.form.get("number_of_lessons"),
         "category": request.form.get("category"),
         "level": request.form.get("level"),
-        "description": request.form.get("description")
+        "description": request.form.get("description"),
+        "status": "Pending"
     }
     print(updated_course_data)
     category_id = ""
@@ -639,6 +764,7 @@ def update_course(id):
         selected_course.category_id = category_id
         selected_course.level = updated_course_data["level"]
         selected_course.description = updated_course_data["description"]
+        selected_course.status="Pending"
 
         db.session.commit()
         print("Cập nhật khóa học thành công")
@@ -696,14 +822,69 @@ def get_lessons():
                 "message": "No courses found"
             }), 404
         lessons_dict = [lesson.to_dict() for lesson in lessons]
+        def map_course_from_lesson(lesson):
+            selected_course = Course.query.filter(Course.id==lesson['course_id']).first()
+            return {
+                **lesson,
+                "courseName":selected_course.name,
+                "courseStatus": selected_course.status
+            }
+    
+        lessons_dict = map(map_course_from_lesson, lessons_dict)
+        
         return jsonify({
-            "lessons": lessons_dict
+            "lessons": list(lessons_dict)
         }), 200
     except SQLAlchemyError as e:
         print("Error getting lessons:", e)
         return jsonify({
             "message": "There was an error getting courses. Try again later."
         }), 500
+    
+@app.route("/api/admin/lessons/search", methods=['GET'])
+def search_lessons():
+    search_term = request.args.get("searchTerm","")
+    user_id = request.cookies.get("user_id", "")
+    user = User.query.get_or_404(user_id)
+    if not user or user.role not in ["TEACHER","ADMIN"]:
+        return jsonify({
+            "message": "Unauthorized access"
+        }), 400
+    lessons = []
+    if user.role == "TEACHER":
+        lessons = Lesson.query.filter(
+            and_(
+                or_(
+                    Lesson.name.ilike(f"%{search_term}%"),
+                    Lesson.content.ilike(f"%{search_term}%")
+                ),
+                Lesson.teacher_id==user.id
+            )
+        ).all()
+    else:
+        lessons = Lesson.query.filter(
+            or_(
+                Lesson.name.ilike(f"%{search_term}%"),
+                Lesson.content.ilike(f"%{search_term}%")
+            )
+        ).all()
+
+    lessons_dict = [lesson.to_dict() for lesson in lessons if lessons]
+
+    def map_course_from_lesson(lesson):
+        selected_course = Course.query.filter(Course.id==lesson['course_id']).first()
+        return {
+            **lesson,
+            "courseName":selected_course.name,
+            "courseStatus": selected_course.status
+        }
+    
+    lessons_dict = map(map_course_from_lesson, lessons_dict)
+
+    return jsonify({
+        "lessons": list(lessons_dict)
+    }), 200
+
 @app.route("/api/admin/lessons/<int:id>", methods=["GET"])
 def get_lesson_by_id(id):
     user_id = request.cookies.get("user_id", "")
@@ -726,7 +907,8 @@ def get_lesson_by_id(id):
         return jsonify({
             "lesson": {
                 **selected_lesson.to_dict(),
-                "courseName": selected_course.name 
+                "courseName": selected_course.name,
+                "courseStatus": selected_course.status
             }
         }), 200
     except:
@@ -750,10 +932,14 @@ def add_lesson():
                 "message": "Course not found."
             })
         lesson_video = request.files.get("lessonVideo", None)
+        lesson_youtube = request.form.get("lessonYoutube", "")
         lesson_video_url = ""
         if lesson_video:
             response = cloudinary.uploader.upload(lesson_video, resource_type='video')
             lesson_video_url = response['secure_url']
+
+        if len(lesson_youtube) > 0:
+            lesson_video_url = lesson_youtube
         new_lesson = Lesson(
             name=request.form.get("lessonName"),
             content=request.form.get("lessonContent"),
@@ -794,11 +980,16 @@ def update_lesson(id):
                 "message": "Course not found."
             })
         lesson_video = request.files.get("lessonVideo", None)
+        lesson_youtube = request.form.get("lessonYoutube", "")
+
         lesson_video_url = selected_lesson.video_url
         if lesson_video:
             response = cloudinary.uploader.upload(lesson_video, resource_type='video')
             lesson_video_url = response['secure_url']
-        existing_video_url = selected_lesson.to_dict().video_url
+        if len(lesson_youtube) > 0:
+            lesson_video_url = lesson_youtube
+        
+        existing_video_url = selected_lesson.video_url
         if len(existing_video_url) > 0:
             response = cloudinary.uploader.destroy(existing_video_url, resource_type='video')
         selected_lesson.name = request.form.get("lessonName")
