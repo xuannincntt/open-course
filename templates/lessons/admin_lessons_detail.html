@@ -1,0 +1,53 @@
+{% extends './layout/admin_base.html'%}
+{%block style%}
+<link href="{{url_for('static',filename='css/lessons/admin_lessons_detail.css')}}" rel="stylesheet" />
+{%endblock%}
+{% block content %}
+<div class="detail-lesson">
+    <div class="detail-lesson-header align-left">
+        <div class="header-return align-left">
+            <a 
+                href="/admin/lessons"
+                class="return-link"
+            >
+                <i class='bx bx-arrow-back return-icon'></i>
+            </a>
+            
+        </div>
+        <div class="header-title align-left">
+            <p class="return-text">Return to courses</p>
+            <h2 class="title-text">Lesson Details</h2>
+        </div>
+    </div>
+    <div class="detail-lesson-section">
+        <div class="course-info-section">
+            <div class="course-info-card">
+                <h3 class="card-name card-course-name">Lesson for Course:</h3>
+                <p class="card-value course-name-value" id="course-name"></p>
+            </div>
+        </div>
+        <div class="lesson-info-section">
+            <div class="lesson-info-card">
+                <h3 class="card-name">Lesson Name</h3>
+                <p class="card-value" id="lesson-name"></p>
+            </div>
+            <div class="lesson-info-card">
+                <h3 class="card-name">Lesson Video</h3>
+                <video 
+                    id="lesson-video" 
+                    style="display: none;"
+                    controls 
+                    width="100%">
+                </video> 
+            </div>
+            <div class="lesson-info-card">
+                <h3 class="card-name">Lesson Content</h3>
+                <p class="card-value" id="lesson-content"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{%block javascript%}
+<script type="module" src="{{url_for('static', filename='js/lessons/admin_lessons_detail.js')}}"></script>
+{%endblock%}

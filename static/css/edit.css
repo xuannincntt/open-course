@@ -1,0 +1,420 @@
+.inf {
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    font-size: 1.7rem;
+    color: #444746;
+    background-color: #f5f5f5;
+    background: #f3f8fd;
+}
+
+.inf h1 {
+    color:#1f1f1f;
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+.inf .title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.inf-basic {
+    font-size: 1.7rem;
+    width: 55%;
+    margin: 0 auto 1rem;
+    border: .5px solid #e1e3e1;
+    border-bottom: none;
+    border-radius: 1rem;
+    overflow: hidden;
+    background-color: #ffffff;
+}
+
+.inf-basic h5 {
+    padding: 3rem 3rem 1.5rem;
+    color: #1f1f1f;
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+
+.inf-basic .textHeader {
+    padding: 0 3rem 1rem;
+}
+
+.inf-login {
+    background-color: #ffffff;
+}
+
+.inf-basic .img-contain,
+.name-contain,
+.date-contain,
+.sex-contain,
+.inf-contact .phone-contain,
+.inf-contact .address-contain,
+.inf-login .email-contain,
+.inf-login .pass-contain {
+    display: grid;
+    grid-template-columns: 20% 70% 10%;
+    grid-template-rows: 1fr;
+    align-items: center;
+    border-bottom: .5px solid #e1e3e1;
+    justify-content: center;
+    padding: 2.3rem 3rem;
+    cursor: pointer;
+}
+
+.img-popup,
+.name-popup,
+.email-popup
+/* .pass-popup,
+.newpass-popup */{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.img-popup-content,
+.name-popup-content,
+.email-popup-content,
+.pass-popup-content,
+.newpass-popup-content {
+    background: white;
+    padding: 4rem 3.5rem;
+    border-radius: 2rem;
+    width: 23%;
+    position: relative;
+}
+
+.img-popup-content h1,
+.name-popup-content h1,
+.email-popup-content h1,
+.pass-popup-content h1,
+.newpass-popup-content h1 {
+    text-align: left;
+    color: var(--text-up-color);
+    font-size: 2.5rem;
+    font-weight: 600;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+.img-popup-content p,
+.name-popup-content p,
+.email-popup-content p,
+.pass-popup-content p,
+.newpass-popup-content p {
+    padding-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.img-popup-content label,
+.name-popup-content label,
+.email-popup-content label,
+.pass-popup-content label,
+.newpass-popup-content label {
+    color: var(--text-up-color);
+    font-weight: 600;
+}
+
+.img-popup-content input,
+.name-popup-content input,
+.email-popup-content input,
+.pass-popup-content input,
+.newpass-popup-content input {
+    border-radius: 3rem;
+    border: .5px solid var(--main-color);
+    width: 100%;
+    padding: 1.2rem 2rem;
+    margin-top: 1.5rem;
+    font-size: 1.7rem;
+}
+
+.name-popup-content .saveName,
+.email-popup-content .saveEmail,
+.pass-popup-content .savePass,
+.newpass-popup-content .saveNewPass {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 1.3rem;
+    color: #f4f7fd;
+    font-weight: 600;
+    background-color: var(--main-color);
+    border-radius: 3rem;
+    margin-bottom: .5rem;
+}
+
+.img-popup-content #closeImgPopup,
+.name-popup-content #closeNamePopup,
+.email-popup-content #closeEmailPopup,
+.pass-popup-content #closePassPopup,
+.newpass-popup-content #closeNewPassPopup {
+    position: absolute;
+    top: 2rem;
+    right: 3rem;
+    font-size: 3rem;
+    cursor: pointer;
+}
+
+.img-popup-content #closeImgPopup:hover,
+.name-popup-content #closeNamePopup:hover,
+.email-popup-content #closeEmailPopup:hover,
+.pass-popup-content #closePassPopup:hover,
+.newpass-popup-content #closeNewPassPopup:hover {
+    background: #f6f6f6;
+    padding: 0 1rem;
+    right: 2rem;
+    border-radius: 50%;
+}
+
+.img-popup .img-popup-content .avatar {
+    text-align: center;
+}
+
+.img-popup-content img {
+    width: 15rem;
+    border-radius: 50%;
+    box-shadow: 0 .1rem .5rem var(--shadow-color);
+}
+
+.img-popup-content .upload {
+    border: .5px solid var(--main-color);
+    position: relative;
+    width: 100%;
+    padding: 1.2rem 2rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    font-size: 1.7rem;
+    cursor: pointer;
+    border-radius: 1rem;
+}
+
+.img-popup-content .upload:hover {
+    background: #f6f6f6;
+}
+
+.img-popup-content .upload p {
+    padding: 0;
+}
+
+.popup-overlay-pass {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.wrapperPass {
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    width: 415px;
+    margin: auto;
+    height: 390px;
+    background: red;
+    background-color: white;
+    border-radius: 2rem;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.5s ease, opacity 0.5s ease, height .2s ease;
+
+}
+
+.wrapperPass.active-popup {
+    display: flex;
+    opacity: 1;
+}
+
+.wrapperPass.active {
+    height: 490px;
+}
+
+.wrapperPass .pass-popup {
+    transition: transform .2s ease;
+    transform: translateX(0);
+}
+
+.wrapperPass.active .pass-popup {
+    transition: none;
+    transform: translateX(-500px);
+}
+
+.wrapperPass .newpass-popup {
+    position: absolute;
+    transition: none;
+    transform: translateX(500px);
+}
+
+.wrapperPass.active .newpass-popup {
+    transition: transform .2s ease;
+    transform: translateX(0);
+}
+
+.wrapper .pass-popup,
+.wrapper .newpass-popup {
+    width: 100%;
+    display: flex;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.pass-popup-content,
+.newpass-popup-content {
+    padding: 3rem;
+    border-radius: 2rem;
+    width: 100%;
+}
+
+.newpass-popup-content #backToPassPopup {
+    position: absolute;
+    top: 2rem;
+    left: 3rem;
+    font-size: 2.8rem;
+    cursor: pointer;
+}
+
+.newpass-popup-content #backToPassPopup:hover {
+    background: #f6f6f6;
+    padding: 0 .5rem;
+    left: 2.5rem;
+    border-radius: 50%;
+}
+
+.inf-basic .img-contain:hover,
+.name-contain:hover,
+.date-contain:hover,
+.sex-contain:hover,
+.inf-contact .phone-contain:hover,
+.inf-contact .address-contain:hover,
+.inf-login .email-contain:hover,
+.inf-login .pass-contain:hover {
+    background: #f6f6f6;
+}
+
+.inf-basic .img-contain .img-box,
+.name-contain .name-box,
+.date-contain .date-box,
+.sex-contain .sex-box,
+.inf-contact .phone-contain .phone-box,
+.inf-contact .address-contain .address-box,
+.inf-login .email-contain .email-box,
+.inf-login .pass-contain .pass-box {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.inf-basic .img-contain .img-box.end,
+.name-contain .name-box.end,
+.date-contain .date-box.end,
+.sex-contain .sex-box.end,
+.inf-contact .phone-contain .phone-box.end,
+.inf-contact .address-contain .address-box.end,
+.inf-login .email-contain .email-box.end,
+.inf-login .pass-contain .pass-box.end {
+    justify-content: end;
+}
+
+.name-contain .name-box.end i,
+.date-contain .date-box.end i,
+.sex-contain .sex-box.end i,
+.inf-contact .phone-contain .phone-box i,
+.inf-contact .address-contain .address-box i,
+.inf-login .email-contain .email-box i,
+.inf-login .pass-contain .pass-box i {
+    font-size: 3.5rem;
+    font-weight: 500;
+    color:#1f1f1f;
+}
+
+.inf-basic .img-contain .text-box,
+.inf-basic .name-contain .text-box,
+.inf-basic .date-contain .text-box,
+.inf-basic .sex-contain .text-box,
+.inf-contact .phone-contain .text-box,
+.inf-contact .address-contain .text-box,
+.inf-login .email-contain .text-box,
+.inf-login .pass-contain .text-box {
+    text-align: left;
+}
+
+.text-inf {
+    color:#1f1f1f;
+}
+
+.inf-basic .img-contain .img-box img {
+    width: 3vw;
+    border-radius: 50%;
+    border: .5px solid #e1e3e1;
+    text-align: right;
+}
+
+.img {
+    position: relative;
+    width: 3vw;
+    height: 3vw;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.edit-img {
+    right: 0vw;
+    position: absolute;
+    top: 1.8vw;
+    color: #e6e6e6;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 3.1vw;
+    font-size: 2rem;
+    text-align: center;
+    height: 3vw;
+}
+
+.inf-contact {
+    font-size: 1.7rem;
+    width: 60%;
+    margin: 0 auto;
+    border: .5px solid #e1e3e1;
+    border-bottom: none;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.inf-contact h5 {
+    padding: 2rem 3rem 1rem;
+    color: #1f1f1f;
+    font-size: 2.5rem;
+    font-weight: 500;
+}
+
+.inf-login {
+    font-size: 1.7rem;
+    width: 55%;
+    margin: 0 auto 5rem;
+    border: .5px solid #e1e3e1;
+    border-bottom: none;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.inf-login h5 {
+    padding: 2rem 3rem 1rem;
+    color: #1f1f1f;
+    font-size: 2.5rem;
+    font-weight: 500;
+}

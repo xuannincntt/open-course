@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ username }}</title>
+    <link rel="icon" href="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743407933/wnfmvxozfojo9seoywjb.png">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/edit.css">
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+    <!-- box icon -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- header design -->
+    <header class="header">
+        <a href="/" class="logo"><i class='bx bx-book-bookmark'></i> EducationX</a>
+        <nav class="navbar">
+            <a href="/">Trang chủ</a>
+            <a href="/course">Khóa học</a>
+            <a href="/teacher">Giảng viên</a>
+            <a href="/contact">Liên hệ</a>
+        </nav>
+        {% if loggedin %}
+            <div class="dropdown">
+                <p id="name-user">{{ username }}</p>
+                <p><img src="{{ avatar }}" alt="" class="icon-user"></p>
+                <i class='bx bx-chevron-down' id="dropdown"></i>
+            </div>
+            <div class="user-inf">
+                <a href="/{{ username }}"><p>Trang cá nhân</p></a>
+                <a href="/admin"><p>Quản lý</p></a>
+                <hr>
+                <a href="#"><p>Yêu thích</p></a>
+                <a href="#"><p>Bài viết của tôi</p></a>
+                <a href="#"><p>Bài viết đã lưu</p></a>
+                <hr>
+                <a href="/{{ username }}/edit"><p>Cài đặt</p></a>
+                <a href="/logout" onclick="logout()"><p>Đăng xuất</p></a>
+            </div>
+        {% else %}
+            <p id="signup">Đăng ký</p> 
+            <p id="login">Đăng nhập</p>
+        {% endif %}
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+
+    <!-- popup section design -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closeLoginPopup()">
+        <div class="wrapper" id="wrapperPopup" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeLoginPopup()"><i class='bx bx-x'></i></span>
+            <div class="form-box login">
+                <h2>Đăng nhập</h2>
+                <form id="loginForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="email" placeholder="Email">
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
+                        <input type="password" name="password" id="password" placeholder="Mật khẩu">
+                    </div>
+                    <div class="remember-forgot">
+                        <label for="checkbox"><input type="checkbox" name="checkbox" id="checkbox"> Lưu thông tin</label>
+                        <p class="forgotPass">Quên mật khẩu?</p>
+                    </div>
+                    <button type="submit" class="btn">Đăng nhập</button>
+                    <p id="loginMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn chưa có tài khoản? <span class="register-link">Đăng ký</span></p>
+                    </div>
+                </form>
+            </div>
+            <div class="form-box register">
+                <h2>Đăng ký</h2>
+                <form id="registerForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-user'></i></span>
+                        <input type="text" name="username" id="registerName" placeholder="Họ tên">
+                    </div>
+                    <p class="validation-message">{{ username_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="registerEmail" placeholder="Email">
+                    </div>
+                    <p class="validation-message">{{ email_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="password" name="password" id="registerPassword" placeholder="Mật khẩu">
+                    </div>
+                    <div class="input-box">
+                        <select name="role" id="registerRole">
+                            <option value="" disabled selected>Chọn vai trò</option>
+                            <option value="STUDENT">Học viên</option>
+                            <option value="TEACHER">Giáo viên</option>
+                        </select>
+                    </div>
+                    <p class="validation-message">{{ role_error }}</p>                    
+                    <div class="remember-forgot">
+                        <label for="agree"><input type="checkbox" name="agree" id="agree"> Tôi đồng ý với các điều khoản & điều kiện</label>
+                    </div>
+                    <p class="validation-message">{{ password_error }}</p>
+                    <button type="submit" class="btn">Đăng ký</button>
+                    <p id="registerMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn đã có tài khoản? <span class="login-link">Đăng nhập</span></p>
+                    </div>
+                </form>
+                <p class="fail-message">{{ registration_fail | safe}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- information section design -->
+    <section class="inf">
+        <h1>Thông tin cá nhân</h1>
+        <p class="title">Thông tin về bạn và các lựa chọn ưu tiên của bạn trên các dịch vụ của EducationX</p>
+        <div class="inf-basic">
+            <h5>Thông tin cơ bản</h5>
+            <p class="textHeader">Những người khác sử dụng các dịch vụ của EducationX có thể nhìn thấy một số thông tin.</p>
+            <div class="img-contain" id="openImgPopup">
+                <div class="img-box">
+                    <p class="text-box">Ảnh hồ sơ</p>
+                </div>
+                <div class="img-box">
+                    <p class="text-box">Ảnh hồ sơ sẽ giúp bạn tạo nét riêng</p>
+                </div>
+                <div class="img-box end">
+                    <div class="img">
+                        <img src="{{ avatar }}" alt="">
+                        <div class="edit-img"><i class='bx bxs-camera' ></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="img-popup" id="img-popup">
+                <div class="img-popup-content">
+                    <span id="closeImgPopup">&times;</span>
+                    <h1>Ảnh đại diện</h1>
+                    <p>Ảnh hồ sơ sẽ được hiển thị trên trang cá nhân, trong các bình luận và bài viết của bạn</p>
+                    <div class="avatar">
+                        <img src="{{ avatar }}" alt="">
+                    </div>
+                    <div class="upload" id="uploadDiv">
+                        <p><i class='bx bx-upload'></i> Tải ảnh mới lên</p>
+                        <input type="file" accept=".jpg,.jpeg,.png" name="avatar" id="avatar" style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="name-contain" id="openNamePopup">
+                <div class="name-box">
+                    <p class="text-box">Tên</p>
+                </div>
+                <div class="name-box">
+                    <p class="text-inf">{{ username }}</p>
+                </div>
+                <div class="name-box end">
+                    <p><i class='bx bx-chevron-right'></i></p>
+                </div>
+            </div>
+            <div class="name-popup" id="name-popup">
+                <div class="name-popup-content">
+                    <span id="closeNamePopup">&times;</span>
+                    <h1>Cập nhập tên của bạn</h1>
+                    <p>Tên sẽ được hiển thị trên trang cá nhân, trong các bình luận và bài viết của bạn</p>
+                    <label for="name">Họ và tên</label><br>
+                    <input type="text" name="name" id="name" placeholder="Nhập họ và tên của bạn">
+                    <p id="update_name"></p>
+                    <a href="/update_name" class="saveName">Xác nhận</a>
+                </div>
+            </div>
+        </div>
+        <div class="inf-login">
+            <h5>Thông tin đăng nhập</h5>
+            <div class="email-contain" id="openEmailPopup">
+                <div class="email-box">
+                    <p class="text-box">Email</p>
+                </div>
+                <div class="email-box">
+                    <p class="text-inf" id="account"></p>
+                </div>
+                <div class="email-box end">
+                    <p><i class='bx bx-chevron-right'></i></p>
+                </div>
+            </div>
+            <div class="email-popup" id="email-popup">
+                <div class="email-popup-content">
+                    <span id="closeEmailPopup">&times;</span>
+                    <h1>Cập nhập email của bạn</h1>
+                    <p>Email sẽ được sử dụng để đăng nhập vào tài khoản của bạn</p>
+                    <label for="inf-email">Email</label><br>
+                    <input type="email" name="email" id="inf-email" placeholder="Nhập email của bạn">
+                    <p id="update_email"></p>
+                    <a href="/update_email" class="saveEmail">Xác nhận</a>
+                </div>
+            </div>
+            <div class="pass-contain" id="openPassPopup">
+                <div class="pass-box">
+                    <p class="text-box">Mật khẩu</p>
+                </div>
+                <div class="pass-box">
+                    <p class="text-inf">••••••••</p>
+                </div>
+                <div class="pass-box end">
+                    <p><i class='bx bx-chevron-right'></i></p>
+                </div>
+            </div>
+            <div class="popup-overlay-pass" id="popupOverlayPass" onclick="closePassPopup()">
+                <div class="wrapperPass" id="wrapperPass" onclick="event.stopPropagation()">
+                    <div class="pass-popup" id="pass-popup">
+                        <div class="pass-popup-content">
+                            <span id="closePassPopup">&times;</span>
+                            <h1>Xác nhận mật khẩu</h1>
+                            <p>Để xác định rằng bạn là chủ sở hữu tài khoản, vui lòng nhập mật khẩu hiện tại của bạn</p>
+                            <label for="inf-pass">Mật khẩu hiện tại</label><br>
+                            <input type="password" name="password" id="inf-pass" placeholder="Nhập mật khẩu của bạn">
+                            <p id="update_pass"></p>
+                            <a href="#" class="savePass">Xác nhận</a>
+                        </div>
+                    </div>
+                    <div class="newpass-popup" id="newpass-popup">
+                        <div class="newpass-popup-content">
+                            <span id="backToPassPopup"><i class='bx bx-left-arrow-alt'></i></span>
+                            <span id="closeNewPassPopup">&times;</span>
+                            <h1>Đổi mật khẩu</h1>
+                            <p>Mật khẩu sẽ được sử dụng để đăng nhập vào tài khoản của bạn</p>
+                            <label for="inf-newpass">Mật khẩu mới</label><br>
+                            <input type="password" name="newpassword" id="inf-newpass" placeholder="Nhập mật khẩu mới của bạn"><br>
+                            <p id="update_newpass"></p>
+                            <label for="re-inf-newpass">Nhập lại mật khẩu mới</label><br>
+                            <input type="password" name="re-newpassword" id="re-inf-newpass" placeholder="Nhập lại mật khẩu mới"><br>
+                            <p id="update_re_newpass"></p>
+                            <a href="#" class="saveNewPass">Xác nhận</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer section design -->
+    <footer class="footer">
+        <div class="footer-name">
+            <a href="#" class="logo">COFFEE</a>
+            <p>Thưởng thức từng giọt cà phê<br>Hương vị đậm đà, trải nghiệm tinh tế</p>
+        </div>
+        <div class="footer-contain">
+            <div class="footer-box">
+                <i class='bx bx-envelope' ></i>
+                <h2>Đăng ký nhận bản tin</h2>
+                <p>Hãy là người đầu tiên nhận ưu đãi đặc biệt và cập nhật xu hướng cà phê mới nhất!</p>
+                <input type='email' placeholder="Your Email"></input>
+                <input type="submit" value="Gửi tin nhắn" class="btn">
+            </div>
+            <div class="footer-box">
+                <h2>Trang</h2>
+            </div>
+            <div class="footer-box">
+                <p>Trang chủ</p>
+            </div>
+            <div class="footer-box">
+                <p>Thực đơn</p>
+            </div>
+            <div class="footer-box">
+                <p>Cửa hàng</p>
+            </div>
+            <div class="footer-box">
+                <p>Liên hệ</p>
+            </div>
+            <div class="footer-box">
+                <p>Sự kiện</p>
+            </div>
+            <div class="footer-box">
+                <p>Giảm giá</p>
+            </div>
+            <div class="footer-box">
+                <p>Khuyến mãi</p>
+            </div>
+            <div class="footer-box">
+                <h2>Dịch vụ</h2>
+            </div>
+            <div class="footer-box">
+                <p>Thông tin cá nhân</p>
+            </div>
+            <div class="footer-box">
+                <p>Đổi mật khẩu</p>
+            </div>
+            <div class="footer-box">
+                <p>Yêu thích</p>
+            </div>
+            <div class="footer-box">
+                <p>Lịch sử giao dịch</p>
+            </div>
+        </div>
+        <div class="footer-end">
+            <div class="footer-text">
+                <p>Copyright &copy; Coffee | Designed by BRIX Templates - Powered by All</p>
+            </div>
+            <div class="footer-iconTop">
+                <a href="#"><i class='bx bxl-facebook'></i></a>
+                <a href="#"><i class='bx bxl-twitter'></i></a>
+                <a href="#"><i class='bx bxl-instagram-alt'></i></a>
+                <a href="#"><i class='bx bxl-linkedin'></i></a>
+                <a href="#"><i class='bx bxl-youtube'></i></a>
+                <a href="#"><i class='bx bxs-phone'></i></a>
+            </div>
+        </div>
+    </footer>
+    <script src="/static/js/script.js"></script>
+    <script src="/static/js/edit.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+.teacher {
+    background: #f3f8fd;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-teacher {
+    display: flex;
+    margin-top: 3rem;
+    align-items: center;
+}
+
+.header-teacher h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-right: auto;
+}
+
+.header-teacher a {
+    font-size: 1.7rem;
+    margin-left: 2rem;
+    padding: 1rem 2rem;
+    border-radius: 3rem;    
+    background: var(--bg-color);
+    color: var(--text-color);
+    box-shadow: 0 .1rem .5rem var(--shadow-color);
+    transition: .5s ease;
+}
+
+.header-teacher a:hover {
+    box-shadow: 0 0 1rem var(--shadow-color);
+}
+
+.header-teacher a.active {
+    background: var(--main-color);
+    color: var(--bg-color);
+}
+
+.teacher-container {
+    display: grid;
+    margin-top: 3rem;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    gap: 5rem;
+    background-color: var(--bg-color);
+    border: .1rem solid var(--main-color);
+    padding: 2rem 3rem;
+    border-radius: 1rem;
+}
+
+.teacher-container p {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.teacher-container .teacher-box {
+    position: relative;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .1);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    background: var(--bg-color);
+    flex-direction: column;
+    transition: .5s ease;
+}
+
+.teacher-box {
+    cursor: pointer;
+}
+
+.teacher-box img {
+    width: 100%;
+    transition: .5s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.teacher-inf {
+    position: absolute;
+    display: flex;
+    top: 3%;
+    right: 5%;
+    font-size: 1.5rem;
+    padding: 1.5rem 2rem;
+    letter-spacing: .1rem;
+    border-radius: 4rem;
+    background: var(--main-color);
+    color: var(--bg-color);
+}
+
+.teacher-box:hover {
+    border-color: var(--main-color);
+    box-shadow: 0 .1rem 2rem var(--shadow-color);
+    transform: scale(1.02);
+}
+
+.teacher-box .teacher-layer {
+    text-align: left;
+    width: 100%;
+    height: 15%;
+}
+
+.teacher-layer h4 {
+    font-size: 2rem;
+    padding: 2rem 2rem 1.5rem;
+    color: var(--text-color);
+}
+
+.teacher-layer p {
+    font-size: 1.5rem;
+    padding: 0 2rem;
+    color: var(--second-text-color);
+}
+
+.teacher-social {
+    display: flex;
+}
+
+.teacher-social a {
+    width: 4rem;
+    height: 4rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: .1rem solid var(--bg-color);
+    outline: .1rem solid var(--main-color);
+    margin: 2rem 0rem 3rem 2rem;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-size: 2rem;
+}
+
+.teacher-social a:hover {
+    color: var(--bg-color);
+    background-color: var(--main-color);
+    box-shadow: 0 0 1rem var(--main-color);
+}
+
+.pagination-container {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 1.5rem;
+}
+
+.pagination-container a{
+    margin: .5rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--main-color);
+}
+
+.pagination-container a.active {
+    background-color: var(--main-color);
+    color: var(--bg-color);
+    outline: 1px solid var(--main-color);
+    border: 1px solid var(--bg-color);
+}

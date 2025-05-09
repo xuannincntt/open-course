@@ -1,0 +1,42 @@
+{% extends './layout/admin_base.html'%}
+{%block style%}
+<link href="{{url_for('static',filename='css/admin_courses.css')}}" rel="stylesheet" />
+{%endblock%}
+{% block content %}
+<div class="courses-page">
+    <div class="courses-header">
+        <div class="courses-header-title align-left">
+            <h2 class="">Courses</h2>
+        </div>
+       
+        <div class="courses-header-action align-right">
+            <a href="/admin/courses/new" class="add-btn align-center">
+                <i class='bx bx-plus add-icon'></i>
+                <span>New Course</span> 
+            </a>
+        </div>
+        
+    </div>
+    <div class="courses-content">
+        <div class="courses-content-filter"></div>
+        <table class="courses-content-table">
+            <thead>
+                <tr class="courses-table-head">
+                    <th class="align-left">Course ID</th>
+                    <th class="align-left">Image</th>
+                    <th class="align-left">Course Name</th>
+                    <th class="align-center">Date Updated</th>
+                    <th class="align-center">Status</th>
+                    <th class="align-center">Action</th>
+                </tr>
+            </thead>
+            <tbody id="courses-table-body">
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{%block javascript%}
+<script src="{{url_for('static',filename="js/admin_courses.js")}}"></script>
+{%endblock%}

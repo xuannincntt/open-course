@@ -1,0 +1,230 @@
+.lesson {
+    margin: 0;
+    display: flex;
+    font-size: 1.5rem;
+    column-gap: 3rem;
+    background-color: #212121;
+}
+
+section {
+    padding: 10rem 6% 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #212121;
+    padding: 10px 20px;
+    color: white;
+}
+
+.user-inf { 
+    right: 2rem;
+    background-color: #3f3f3f;
+}
+
+.user-inf a {
+    color: white;
+}
+
+.user-inf p:hover {
+    background-color: #717171;
+}
+
+.header-left .logo {
+    color: white;
+    font-weight: 500;
+}
+
+.header-left, .header-center, .header-right {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+#menu-icon-lesson {
+    font-size: 3.6rem;
+    margin-right: 20px;
+    cursor: pointer;
+    font-weight: 400;
+    color: white;
+}
+
+.header-center input[type="text"] {
+    padding: 8px 15px;
+    background-color: #121212;
+    border: 1px solid #303030;
+    border-radius: 20px 0 0 20px;
+    color: white;
+    width: 450px;
+    display: flex;
+    align-items: center;
+    font-size: 1.7rem;
+}
+
+.search-btn {
+    background-color: #222;
+    border: 1px solid #303030;
+    border-left: none;
+    padding: 8px 20px;
+    border-radius: 0 20px 20px 0;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    font-size: 2rem;
+    align-items: center;
+    font-weight: 500;
+}
+
+.mic-btn {
+    background-color: #222;
+    border: none;
+    margin-left: 10px;
+    padding: 8px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+}
+
+.create-btn {
+    background-color: #222;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1.7rem;
+}
+
+.notification-icon {
+    font-size: 18px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Ẩn khỏi màn hình */
+    width: 250px;
+    height: 100%;
+    background-color:#0f0f0f;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    padding: 2rem 1rem;
+    transition: left 0.3s ease;
+    z-index: 999;
+}
+
+.side-menu ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+}
+
+.side-menu ul li {
+    font-size: 1.7rem;
+    display: flex;
+    align-items: center;
+}
+
+
+.side-menu ul li:hover {
+    background-color: #717171;
+    border-radius: 1rem;
+}
+
+.side-menu ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 1rem;
+    font-weight: 500;
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.side-menu ul li a i {
+    font-size: 2rem;
+    padding-right: 1rem;
+    align-items: center;
+    display: flex;
+}
+/* Khi hiển thị */
+.side-menu.active {
+    left: 0;
+}
+
+/* Lớp mờ nền khi menu bật */
+body.dimmed::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998; /* dưới menu */
+}
+
+.left, .right {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.left {
+    width: 75%;
+    color: white;
+}
+
+.left h2 {
+    padding: 2rem 0;
+}
+
+.right {
+    width: 25%;
+    max-height: 680px;
+    min-height: auto;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #212121;
+    color: white;
+    overflow-y: auto;
+}
+
+.right::-webkit-scrollbar {
+    width: 8px;
+}
+
+.right::-webkit-scrollbar-track {
+    background: transparent; /* hoặc rgba(255, 255, 255, 0.1) nếu muốn nền mờ */
+    border-radius: 10px;
+}
+
+.right::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.right::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+iframe {
+    width: 100%;
+    height: 75%;
+    border-radius: 1rem;
+}
+
+.name-lesson {
+    padding: 2rem;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.name-lesson:hover,
+.name-lesson.active {
+    background: #717171;
+}

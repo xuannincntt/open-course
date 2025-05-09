@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="{{url_for('static',filename='css/index_admin.css')}}" rel="stylesheet"/>
+    {%block style%}{%endblock%}
+    <style>
+        .display{
+            display: block;
+        }
+    </style>
+    
+    <title>EducationX</title>
+</head>
+<body>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="header-title align-left">
+                <i class='bx bx-book-bookmark page-logo align-center'></i>
+                <h1 class="page-title">EducationX</h1>
+            </div>
+            <div class="header-greetings align-left">
+                <h2>Welcome, {{ username }}!</h2>
+            </div>
+            <div class="header-utils align-right">
+                <p class="header-date align-center">
+                </p>
+                <div class="header-notice align-center">
+                    
+                </div>
+                <div class="header-account align-center">
+                    <img 
+                        src="{{ url_for('static', filename='images/avatar_placeholder.png') }}"
+                        class="account-avatar"
+                    />
+                    <i class='bx bxs-down-arrow submenu-icon'></i>  
+                    <ul class="submenu hidden">
+                        <li class="submenu-item align-left">
+                            
+                            <a href="/" class="item-link align-center">
+                                <i class='bx bx-home item-icon'></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+
+                        <li class="submenu-item align-left">
+                            
+                            <a href="/{{ username }}/edit" class="item-link align-center">
+                                <i class='bx bx-user-pin item-icon'></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+                        <li class="submenu-item align-left">
+                            
+                            <a href="/settings" class="item-link align-center">
+                                <i class='bx bx-cog item-icon' ></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="submenu-item align-left">
+                            
+                            <a href="/logout" class="item-link align-center">
+                                <i class='bx bx-log-out-circle item-icon' ></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="page-main">
+            <div class="sidebar">
+                <div class="space-holder"></div>
+                <ul class="sidebar-list">
+                    
+                    <li class="sidebar-item align-left">
+                        <a href="/admin" class="sidebar-link align-left">
+                            <i class='bx bxs-dashboard sidebar-icon'></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item align-left">
+                        <a href="/admin/courses" class="sidebar-link align-left">
+                            <i class='bx bx-book sidebar-icon'></i>
+                            <span>Courses</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item align-left">
+                        
+                        <a href="/admin/lessons" class="sidebar-link align-left">
+                            <i class='bx bx-book-open sidebar-icon'></i>
+                            <span>Lessons</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item align-left">
+                        
+                        <a href="/admin/comments" class="sidebar-link align-left">
+                            <i class='bx bx-comment sidebar-icon'></i>
+                            <span>Comments</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item align-left">
+                        
+                        <a href="/admin/analytics" class="sidebar-link align-left">
+                            <i class='bx bx-chart sidebar-icon'></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="space-holder"></div>
+            </div>
+            <div class="content">
+                {% block content %}
+    
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <div id="backdrop" class="hidden">
+    </div>
+    <div id="modal" class="hidden">
+        
+    </div>
+    
+    
+    <script src="../../static/js/index.js" >
+    
+    </script>
+    {%block javascript%}{%endblock%}
+</body>
+</html>

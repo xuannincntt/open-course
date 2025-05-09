@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EducationX</title>
+    <link rel="icon" href="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743407933/wnfmvxozfojo9seoywjb.png">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+    <!-- box icon -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- header design -->
+    <header class="header">
+        <a href="/" class="logo"><i class='bx bx-book-bookmark'></i> EducationX</a>
+        <nav class="navbar">
+            <a href="/" class="active">Trang chủ</a>
+            <a href="/course">Khóa học</a>
+            <a href="/teacher">Giảng viên</a>
+            <a href="/contact">Liên hệ</a>
+        </nav>
+        {% if loggedin %}
+            <div class="dropdown">
+                <p id="name-user">{{ username }}</p>
+                <p><img src="{{ avatar }}" alt="" class="icon-user"></p>
+                <i class='bx bx-chevron-down' id="dropdown"></i>
+            </div>
+            <div class="user-inf">
+                <a href="/{{ username }}"><p>Trang cá nhân</p></a>
+                <a href="/admin"><p>Quản lý</p></a>
+                <hr>
+                <a href="#"><p>Yêu thích</p></a>
+                <a href="#"><p>Bài viết của tôi</p></a>
+                <a href="#"><p>Bài viết đã lưu</p></a>
+                <hr>
+                <a href="/{{ username }}/edit"><p>Cài đặt</p></a>
+                <a href="/logout" onclick="logout()"><p>Đăng xuất</p></a>
+            </div>
+        {% else %}
+            <p id="signup">Đăng ký</p> 
+            <p id="login">Đăng nhập</p>
+        {% endif %}
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+    
+    <!-- popup section design -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closeLoginPopup()">
+        <div class="wrapper" id="wrapperPopup" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeLoginPopup()"><i class='bx bx-x'></i></span>
+            <div class="form-box login">
+                <h2>Đăng nhập</h2>
+                <form id="loginForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="email" placeholder="Email">
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
+                        <input type="password" name="password" id="password" placeholder="Mật khẩu">
+                    </div>
+                    <div class="remember-forgot">
+                        <label for="checkbox"><input type="checkbox" name="checkbox" id="checkbox"> Lưu thông tin</label>
+                        <p class="forgotPass">Quên mật khẩu?</p>
+                    </div>
+                    <button type="submit" class="btn">Đăng nhập</button>
+                    <p id="loginMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn chưa có tài khoản? <span class="register-link">Đăng ký</span></p>
+                    </div>
+                </form>
+            </div>
+            <div class="form-box register">
+                <h2>Đăng ký</h2>
+                <form id="registerForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-user'></i></span>
+                        <input type="text" name="username" id="registerName" placeholder="Họ tên">
+                    </div>
+                    <p class="validation-message">{{ username_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="registerEmail" placeholder="Email">
+                    </div>
+                    <p class="validation-message">{{ email_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="password" name="password" id="registerPassword" placeholder="Mật khẩu">
+                    </div>
+                    <div class="input-box">
+                        <select name="role" id="registerRole">
+                            <option value="" disabled selected>Chọn vai trò</option>
+                            <option value="STUDENT">Học viên</option>
+                            <option value="TEACHER">Giáo viên</option>
+                        </select>
+                    </div>
+                    <p class="validation-message">{{ role_error }}</p>                    
+                    <div class="remember-forgot">
+                        <label for="agree"><input type="checkbox" name="agree" id="agree"> Tôi đồng ý với các điều khoản & điều kiện</label>
+                    </div>
+                    <p class="validation-message">{{ password_error }}</p>
+                    <button type="submit" class="btn">Đăng ký</button>
+                    <p id="registerMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn đã có tài khoản? <span class="login-link">Đăng nhập</span></p>
+                    </div>
+                </form>
+                <p class="fail-message">{{ registration_fail | safe}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- home section design -->
+    <section class="home" id="home">
+        <div class="profession-box"></div>
+        <div class="home-content">
+            <h1>Phát triển kỹ năng, định hình tương lai</h1>
+            <p>Giới thiệu Academy, ngôi trường công nghệ của tương lai.
+                Chúng tôi dạy bạn những kỹ năng cần thiết để sẵn sàng cho ngày mai.</p>
+            <a href="/course" class="btn">KHÁM PHÁ</a>
+            <a href="#popular" class="btn">XEM THÊM</a>
+        </div>
+        <div class="home-img ">
+            <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743408180/gzgfuhg46bfnpgnlbuqe.jpg">
+        </div>
+        <div class="profession-container">
+            <div class="profession-box"></div>
+        </div>
+    </section>
+
+    <!-- popular section design -->
+    <section class="popular" id="popular">
+        <h1 class="heading">Khóa học phổ biến</h1>
+        <div class="popular-container">
+
+            <!-- <div class="popular-box">
+                <img src="/static/img/popular1.jpg" alt="">
+                <div class="popular-inf">
+                    <div class="time">
+                        <h5>7hr 24m</h5>
+                    </div>
+                    <div class="price">
+                        <h5>$99.00 USD</h5>
+                    </div>
+                </div>
+                <div class="popular-layer">
+                    <h4>Graphic Design</h4>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                    <div class="popular-end">
+                        <img src="/static/img/test1.png" alt="">
+                        <a href="#" class="add-to-cart"><i class='bx bxs-cart'></i></a>
+                        <a href="#"><i class='bx bxs-edit'></i> Design</a>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+        <div id="popular-end">
+            <a href="/course">XEM THÊM</a>
+        </div>
+    </section>
+
+    <!-- reason section design -->
+    <section class="reason" id="reason">
+        <h1 class="heading">Tham gia khóa học của chúng tôi</h1>
+        <div class="reason-container">
+            <div class="reason-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743409205/h1nmkulwi6eyzwnhwxaj.jpg" alt="">
+                <h3>1. Học tập</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                     Aspernatur asperiores maiores optio cum impedit magni!</p>
+            </div>
+            <div class="reason-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743409207/ibhop34x2b0rj9pjd47h.jpg" alt="">
+                <h3>2. Chứng chỉ</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                     Aspernatur asperiores maiores optio cum impedit magni!</p>
+            </div>
+            <div class="reason-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743409213/gmgkejd7262ktqxq8jqg.jpg" alt="">
+                <h3>3. Làm việc</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                     Aspernatur asperiores maiores optio cum impedit magni!</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- teacher section design -->
+    <section class="teacher" id="teacher">
+        <div class="teacher-content">
+            <h1 class="heading">Khóa học được giảng dạy bởi các chuyên gia trên toàn thế giới</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Et itaque aperiam, perferendis magnam tempora soluta!</p>
+            <a href="/teacher" class="btn">GIẢNG VIÊN</a>
+            <a href="#grow" class="btn">TÌM HIỂU THÊM</a>
+        </div>
+        <div class="teacher-img">
+            <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743411490/l3ftdmfjupiydl2gbuvp.jpg" alt="">
+        </div>
+        <div class="teacher-mess">
+            <h3>Giảng viên tiêu biểu</h3>
+            <h2>"Dạy trên nền tảng giáo dục là một trải nghiệm tuyệt vời"</h2>
+            <p>Marketing Lead ar Company</p>
+        </div>
+    </section>
+
+    <!-- grow section design -->
+    <section class="grow" id="grow">
+        <div class="grow-yellow"></div>
+        <div class="grow-content">
+            <h1 class="heading">Phát triển sự nghiệp của bạn ngay hôm nay với các khóa học</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur
+                 molestias excepturi alias ab atque similique possimus omnis!</p>
+            <a href="/course" class="btn">KHÁM PHÁ</a>
+        </div>
+        <div class="grow-container">
+            <div class="grow-box">
+                <h1>9/10</h1>
+                <p>Điểm hài lòng khóa học</p>
+            </div>
+            <div class="grow-box">
+                <h1>10K+</h1>
+                <p>Số người học tham gia khóa học</p>
+            </div>
+            <div class="grow-box">
+                <h1>96%</h1>
+                <p>Tỷ lệ hoàn thành khóa học</p>
+            </div>
+            <div class="grow-origin"></div>
+            <div class="grow-blue"></div>
+        </div>
+    </section>
+
+    <!-- about section design -->
+    <section class="about" id="about">
+        <div class="about-heading">
+            <h1 class="heading">Giáo dục</h1>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+             Non velit accusamus natus expedita hic aperiam?</p>
+        </div>
+        <div class="about-container">
+            <div class="about-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743411689/loy2g8mw03nbhqvd3x1v.jpg" alt="">
+            </div>
+            <div class="about-box"><i class='bx bx-briefcase'></i></div>
+            <div class="about-box"><i class='bx bx-transfer'></i></div>
+            <div class="about-box"><i class='bx bxs-group'></i></div>
+            <div class="about-box">
+                <h2>Chuyên gia trong ngành</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                     Sint quisquam voluptatem voluptatum commodi ullam quas?</p>
+            </div>
+            <div class="about-box">
+                <h2>Nội dung khóa học mới nhất</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                     Sint quisquam voluptatem voluptatum commodi ullam quas?</p>
+            </div>
+            <div class="about-box">
+                <h2>Cộng đồng sinh viên</h2> 
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                     Sint quisquam voluptatem voluptatum commodi ullam quas?</p>
+            </div>
+        </div>
+        <a href="#browse" class="btn">XEM THÊM</a>
+    </section>
+
+    <!-- browse section design -->
+    <section class="browse" id="browse">
+        <h1 class="heading">Danh mục khóa học</h1>
+        <div class="popular-container">
+            <div class="popular-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743413234/tgiurw58kravmkd4hlg5.jpg" alt="">
+                <div class="popular-inf">
+                    <div class="price">
+                        <h5>7 Courses</h5>
+                    </div>
+                </div>
+                <div class="popular-layer">
+                    <h4>Thiết kế</h4>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                </div>
+            </div>
+            <div class="popular-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743413238/rlt7qskphn5pwbj3aykj.jpg" alt="">
+                <div class="popular-inf">
+                    <div class="price">
+                        <h5>12 Courses</h5>
+                    </div>
+                </div>
+                <div class="popular-layer">
+                    <h4>Lập trình</h4>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                </div>
+            </div>
+            <div class="popular-box">
+                <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743413245/f622kiwujq5tn3svlfdf.jpg" alt="">
+                <div class="popular-inf">
+                    <div class="price">
+                        <h5>5 Courses</h5>
+                    </div>
+                </div>
+                <div class="popular-layer">
+                    <h4>Tiếp thị</h4>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- us section design -->
+    <section class="us" id="us">
+        <h1 class="heading">Học viên nói gì về chúng tôi</h1>
+        <div class="us-box-up mySwiper">
+            <div class="us-container swiper-wrapper">
+                <div class="us-box swiper-slide">
+                    <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743412598/k5agjgwzdfs6rfjamtwu.jpg" alt="">
+                    <div class="us-box-content">
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                Quae, optio officiis laborum repellat consequatur eius magnam dolores ipsa? In, excepturi?"</p>
+                        <h2>Vũ Xuân Nin</h2>
+                        <p>Junior Designer at Company</p>
+                    </div>
+                </div>
+                <div class="us-box swiper-slide">
+                    <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743412801/xzcj4oza387tbujbevnn.jpg" alt="">
+                    <div class="us-box-content">
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                Quae, optio officiis laborum repellat consequatur eius magnam dolores ipsa? In, excepturi?"</p>
+                        <h2>Trần Nhân Phát</h2>
+                        <p>Website Developer at University</p>
+                    </div>
+                </div>
+                <div class="us-box swiper-slide">
+                    <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743413669/z5z0cri1bdwi1jdugbsu.jpg" alt="">
+                    <div class="us-box-content">
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <i class='bx bxs-star' ></i>
+                        <p>"Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                Quae, optio officiis laborum repellat consequatur eius magnam dolores ipsa? In, excepturi?"</p>
+                        <h2>Vũ Hồng Anh</h2>
+                        <p>Marketing at Business</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="us-inf">
+            <div class="us-inf-box">
+                <h1>100,000+</h1>
+                <p>Người học</p>
+            </div>
+            <div class="us-inf-box">
+                <h1>20,000+</h1>
+                <p>Khóa học</p>
+            </div>
+            <div class="us-inf-box">
+                <h1>5,000+</h1>
+                <p>Đánh giá 5 sao</p>
+            </div>
+            <div class="us-inf-box">
+                <h1>75,000+</h1>
+                <p>Cộng đồng sinh viên</p>
+            </div>
+        </div>
+        <a href="/teacher" class="btn">KHÁM PHÁ NGAY</a>
+    </section>
+    
+    <!-- footer section design -->
+    <footer class="footer">
+        <div class="footer-name">
+            <a href="#" class="logo"><i class='bx bx-book-bookmark'></i> Education X</a>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Similique magni omnis laudantium sequi!</p>
+        </div>
+        <div class="footer-contain">
+            <div class="footer-box">
+                <i class='bx bx-envelope' ></i>
+                <h2>Subscribe to our newsletter</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                     Quidem beatae maxime necessitatibus aut repellendus aliquid.</p>
+                <textarea name="" id="" cols="30" rows="8" placeholder="Your Message"></textarea>
+                <input type="submit" value="Send Message" class="btn">
+            </div>
+            <div class="footer-box">
+                <h2>Pages</h2>
+            </div>
+            <div class="footer-box">
+                <p>Home</p>
+            </div>
+            <div class="footer-box">
+                <p>About</p>
+            </div>
+            <div class="footer-box">
+                <p>Courses</p>
+            </div>
+            <div class="footer-box">
+                <p>Individual Course</p>
+            </div>
+            <div class="footer-box">
+                <p>Resourse Center</p>
+            </div>
+            <div class="footer-box">
+                <p>Blog Post</p>
+            </div>
+            <div class="footer-box">
+                <p>Event</p>
+            </div>
+            <div class="footer-box">
+                <p>Individual Event</p>
+            </div>
+            <div class="footer-box">
+                <p>Teachers</p>
+            </div>
+            <div class="footer-box">
+                <p>Individual Teacher</p>
+            </div>
+            <div class="footer-box">
+                <p>Contact</p>
+            </div>
+            <div class="footer-box">
+                <h2>Utility pages</h2>
+            </div>
+            <div class="footer-box">
+                <p>Start Here</p>
+            </div>
+            <div class="footer-box">
+                <p>Styleguide</p>
+            </div>
+            <div class="footer-box">
+                <p>404 Not Found</p>
+            </div>
+            <div class="footer-box">
+                <p>Password Protected</p>
+            </div>
+            <div class="footer-box">
+                <p>Licenses</p>
+            </div>
+            <div class="footer-box">
+                <p>Changelog</p>
+            </div>
+        </div>
+        <div class="footer-end">
+            <div class="footer-text">
+                <p>Copyright &copy; Education X | Designed by BRIX Templates - Powered by Nin</p>
+            </div>
+            <div class="footer-iconTop">
+                <a href="#"><i class='bx bxl-facebook'></i></a>
+                <a href="#"><i class='bx bxl-twitter'></i></a>
+                <a href="#"><i class='bx bxl-instagram-alt'></i></a>
+                <a href="#"><i class='bx bxl-linkedin'></i></a>
+                <a href="#"><i class='bx bxl-youtube'></i></a>
+                <a href="#"><i class='bx bxs-phone'></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- swiper js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- custom js -->
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

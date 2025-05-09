@@ -1,0 +1,147 @@
+.courses-page{
+
+    .courses-header{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding-bottom: 1rem;
+
+
+        .courses-header-title{
+            
+            h2{
+                margin: 0;
+                padding: 0;
+                font-size: 1.5rem;
+            }
+        }
+
+        .courses-header-action{
+
+            .add-btn{
+                box-sizing: border-box;
+                text-decoration: none;
+                padding: 0.5rem;
+                color: white;
+                background-color: rgb(1, 156, 1);
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+                border-radius: 5px;
+
+                .add-icon{
+                    font-size: 1.4rem;
+                }
+
+                span{
+                    font-size: 1.1rem;
+                }
+
+                &:hover{
+                    background-color: rgb(15, 131, 19);
+                }
+            }
+        }
+    }
+
+    .courses-content{
+        box-sizing: border-box;
+        .courses-content-filter{
+            box-sizing: border-box;
+
+        }
+
+        .courses-content-table{
+            box-sizing: border-box;
+            width: 100%;
+            border-collapse: collapse;
+
+            .courses-table-head, .courses-table-data{
+                box-sizing: border-box;
+                display: grid;
+                grid-template-columns: auto 10% 50% 10% 10% 10%;
+                background-color: white;
+            }
+
+            td, th{
+                box-sizing: border-box;
+                width: 100%;
+                height: auto;
+                padding: 0.5rem;
+
+            }
+
+            .courses-table-head{
+                border: 1px solid rgb(220, 220, 220);
+
+            }
+
+            .courses-table-data{
+                margin: 1rem 0;
+                box-shadow: rgba(4, 12, 59, 0.316) 0px 3px 3px;
+                border-radius: 10px;
+                transition: all 0.3s ease-in-out;
+                cursor: pointer;
+
+                td {
+
+                    padding: 1rem 0.5rem;
+
+                    img{
+                        width: 70px;
+                        height: 70px;
+                        border-radius: 5px;
+                    }
+
+
+                    .edit-icon, .delete-icon{
+                        font-size: 1.4rem;
+                        transition: all 0.2s ease-in-out;
+
+                    }
+
+                    .course-edit-btn{
+                        padding: 0.3rem;
+                        background-color: white;
+
+                        .edit-icon{
+                            color: rgb(177, 177, 2);
+                        }
+
+                        &:hover{
+                            .edit-icon{
+                            color: rgb(93, 93, 0);
+                            }
+                        }
+                    }
+
+                    .course-delete-btn{
+                        background-color: white;
+                        padding: 0.3rem;
+                        border: none;
+                        cursor: pointer;
+                        
+                        .delete-icon{
+                            color: rgb(216, 3, 3);
+
+
+                        }
+
+                        &:hover{
+                            .delete-icon{
+                                color: rgb(164, 0, 0);
+                            }
+                        }
+                    }
+                }
+                
+
+                &:hover{
+                    background-color: aliceblue;
+                    box-shadow: rgba(4, 12, 59, 0.316) 0px 3px 6px;
+                    transform: scale(1.01) translateY(-3px);
+                }
+                
+            }
+
+        }
+    }
+}

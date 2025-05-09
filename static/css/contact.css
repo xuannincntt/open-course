@@ -1,0 +1,85 @@
+.contact {
+    background-image: url(/static/img/contact.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact h2 {
+    font-size: 5rem;
+    color: #444746;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.contact form {
+    width: 45%;
+    text-align: center;
+}
+
+form .contact-input {
+    display: flex;
+    justify-content: space-between;
+}
+
+.contact-input .input-field {
+    width: 48.5%;
+}
+
+.field .item {
+    width: 100%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2); /* Nền trắng hơi mờ */
+    backdrop-filter: blur(5px);
+    border: 2px solid var(--main-color);
+    outline: none;
+    border-radius: 6px;
+    font-size: 1.7rem;
+    color: #444746;
+    margin: 12px 0;
+}
+
+.field .item::placeholder {
+    color: #444746;
+}
+
+.field .error-txt {
+    font-size: 1.7rem;
+    color: #d93025;
+    text-align: left;
+    margin: -5px 0 10px;
+    display: none;
+}
+
+form .textarea-field .item {
+    resize: none;
+}
+
+form .textarea-field .error-txt {
+    margin-top: -10px;
+}
+
+form button {
+    padding: 12px 32px;
+    background-color: var(--main-color);
+    border: none;
+    outline: none;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem var(--main-color);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: .1rem;
+    font-size: 1.7rem;
+    margin-top: 2rem;
+    transition: .5s ease;
+}
+
+form button:hover {
+    box-shadow: none;
+}

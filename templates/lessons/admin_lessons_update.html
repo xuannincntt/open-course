@@ -1,0 +1,99 @@
+{% extends './layout/admin_base.html'%}
+{%block style%}
+<link href="{{url_for('static',filename='css/lessons/admin_lessons_update.css')}}" rel="stylesheet" />
+{%endblock%}
+{% block content %}
+<div class="update-lesson">
+    <div class="update-lesson-header align-left">
+        <div class="header-return align-left">
+            <a 
+                href="/admin/lessons"
+                class="return-link"
+            >
+                <i class='bx bx-arrow-back return-icon'></i>
+            </a>
+            
+        </div>
+        <div class="header-title align-left">
+            <p class="return-text">Return to courses</p>
+            <h2 class="title-text">Update Lesson</h2>
+        </div>
+    </div>
+    <div class="update-lesson-section">
+        <form class="update-lesson-form" method="PUT" >
+            <div class="course-select-section">
+                <div class="form-field course-title-field">
+                    <label for="courseId" class="form-label">
+                        <span class="field-name course-name">New Lesson for Course:</span>
+                        <select 
+                            id="courseId"
+                            name="courseId"
+                            class="form-input course-name-input"
+                            placeholder="Choose the course to add lesson"
+                        >
+                            <option value="">Choose the course to add lesson</option>
+                        </select>
+                    </label>
+                    
+                </div>
+            </div>
+            <div class="lesson-info-section">
+                <div class="form-field lesson-name-field">
+                    <label for="lessonName" class="form-label">
+                        <span class="field-name lesson-name">Lesson Name</span>
+                        <input 
+                            type="text"
+                            id="lessonName"
+                            name="lessonName"
+                            class="form-input lesson-name-input"
+                            placeholder="Enter the name of this lesson"
+                        />
+                    </label>
+                </div>
+                <div class="form-field lesson-video-field">
+                    <label for="lessonVideo" class="form-label">
+                        <span class="field-name lesson-video">Lesson Video</span>
+                        <input 
+                            type="file"
+                            id="lessonVideo"
+                            name="lessonVideo"
+                            class="form-input lesson-video-input"
+                            accept="video/*"
+                        />
+                        <video 
+                            id="lesson-video-preview" 
+                            style="display: none;"
+                            controls 
+                            width="100%">
+                        </video>
+                    </label>
+                    
+                </div>
+                <div class="form-field lesson-content-field">
+                    <label for="lessonContent" class="form-label">
+                        <span class="field-name lesson-name">Lesson Content</span>
+                        <textarea 
+                            id="lessonContent"
+                            name="lessonContent"
+                            class="form-input lesson-content-input"
+                            cols="100" 
+                            rows="7" 
+                        >
+                        </textarea>
+
+                    </label>
+                    
+                </div>
+            </div>
+            <div class="lesson-submit-section align-center">
+                <button type="submit" class="submit-btn align-center">
+                    <span class="submit-lesson-btnTitle">Update Lesson</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{%block javascript%}
+<script type="module" src="{{url_for('static', filename='js/lessons/admin_lessons_update.js')}}"></script>
+{%endblock%}

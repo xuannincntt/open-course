@@ -1,0 +1,41 @@
+{% extends './layout/admin_base.html'%}
+{%block style%}
+<link href="{{url_for('static',filename='css/admin_lessons.css')}}" rel="stylesheet" />
+{%endblock%}
+{% block content %}
+<div class="lessons-page">
+    <div class="lessons-header">
+        <div class="lessons-header-title align-left">
+            <h2 class="">Lessons</h2>
+        </div>
+       
+        <div class="lessons-header-action align-right">
+            <a href="/admin/lessons/new" class="add-btn align-center">
+                <i class='bx bx-plus add-icon'></i>
+                <span>New Lesson</span> 
+            </a>
+        </div>
+        
+    </div>
+    <div class="lessons-content">
+        <div class="lessons-content-filter"></div>
+        <table class="lessons-content-table">
+            <thead>
+                <tr class="lessons-table-head">
+                    <th class="align-left">No.</th>
+                    <th class="align-left">Lesson Name</th>
+                    <th class="align-left">Lesson Content</th>
+                    <th class="align-center">Date Updated</th>
+                    <th class="align-center">Action</th>
+                </tr>
+            </thead>
+            <tbody id="lessons-table-body">
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{%block javascript%}
+<script type="module" src="{{url_for('static',filename="js/admin_lessons.js")}}"></script>
+{%endblock%}

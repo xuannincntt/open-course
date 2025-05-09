@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bài học</title>
+        <link rel="icon" href="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743407933/wnfmvxozfojo9seoywjb.png">
+    
+        <!-- custom css -->
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet" href="/static/css/lesson.css">
+    
+        <!-- swiper css -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    
+        <!-- box icon -->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- header design -->
+    <header class="header">
+        <div class="header-left">
+            <i class="bx bx-menu menu-icon" id="menu-icon-lesson"></i>
+            <a href="/" class="logo"><i class='bx bx-book-bookmark'></i> EducationX</a>
+        </div>
+      
+        <div class="header-center">
+            <input type="text" placeholder="Tìm kiếm">
+            <button class="search-btn"><i class='bx bx-search'></i></button>
+        </div>
+      
+        <div class="header-right">
+            <button class="create-btn"><i class="fas fa-plus"></i> Đánh giá</button>
+            <button class="create-btn"><i class="fas fa-plus"></i> 1/10 Bài học</button>
+            <button class="create-btn"><i class='bx bx-notepad' ></i> Ghi chú</button>
+            <i class="fas fa-bell notification-icon"></i>
+            {% if loggedin %}
+                <div class="dropdown">
+                    <!-- <p id="name-user">{{ username }}</p> -->
+                    <p><img src="{{ avatar }}" alt="" class="icon-user"></p>
+                    <i class='bx bx-chevron-down' id="dropdown"></i>
+                </div>
+                <div class="user-inf">
+                    <a href="/{{ username }}"><p>Trang cá nhân</p></a>
+                    <a href="/admin"><p>Quản lý</p></a>
+                    <hr>
+                    <a href="#"><p>Yêu thích</p></a>
+                    <a href="#"><p>Bài viết của tôi</p></a>
+                    <a href="#"><p>Bài viết đã lưu</p></a>
+                    <hr>
+                    <a href="/{{ username }}/edit"><p>Cài đặt</p></a>
+                    <a href="/logout" onclick="logout()"><p>Đăng xuất</p></a>
+                </div>
+            {% else %}
+                <p id="signup">Đăng ký</p> 
+                <p id="login">Đăng nhập</p>
+            {% endif %}
+        <!-- <div class="bx bx-menu" id="menu-icon"></div> -->
+    </header>
+    <div class="side-menu" id="sideMenu">
+        <div class="header-left">
+            <i class="bx bx-menu menu-icon" id="menu-icon-lesson"></i>
+            <a href="/" class="logo"><i class='bx bx-book-bookmark'></i> EducationX</a>
+        </div>
+        <ul>
+            <li><a href="/"><i class='bx bx-home'></i> Trang chủ</a></li>
+            <li><a href="/course"><i class='bx bx-category'></i> Khóa học</a></li>
+            <li><a href="/teacher"><i class='bx bx-briefcase'></i> Giảng viên</a></li>
+            <li><a href="/contact"><i class='bx bx-send'></i> Liên hệ</a></li>
+        </ul>
+        <hr>
+    </div>
+
+    <!-- popup section design -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closeLoginPopup()">
+        <div class="wrapper" id="wrapperPopup" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeLoginPopup()"><i class='bx bx-x'></i></span>
+            <div class="form-box login">
+                <h2>Đăng nhập</h2>
+                <form id="loginForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="email" placeholder="Email">
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
+                        <input type="password" name="password" id="password" placeholder="Mật khẩu">
+                    </div>
+                    <div class="remember-forgot">
+                        <label for="checkbox"><input type="checkbox" name="checkbox" id="checkbox"> Lưu thông tin</label>
+                        <p class="forgotPass">Quên mật khẩu?</p>
+                    </div>
+                    <button type="submit" class="btn">Đăng nhập</button>
+                    <p id="loginMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn chưa có tài khoản? <span class="register-link">Đăng ký</span></p>
+                    </div>
+                </form>
+            </div>
+            <div class="form-box register">
+                <h2>Đăng ký</h2>
+                <form id="registerForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-user'></i></span>
+                        <input type="text" name="username" id="registerName" placeholder="Họ tên">
+                    </div>
+                    <p class="validation-message">{{ username_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="registerEmail" placeholder="Email">
+                    </div>
+                    <p class="validation-message">{{ email_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="password" name="password" id="registerPassword" placeholder="Mật khẩu">
+                    </div>
+                    <div class="input-box">
+                        <select name="role" id="registerRole">
+                            <option value="" disabled selected>Chọn vai trò</option>
+                            <option value="student">Học viên</option>
+                            <option value="teacher">Giáo viên</option>
+                        </select>
+                    </div>
+                    <p class="validation-message">{{ role_error }}</p>                    
+                    <div class="remember-forgot">
+                        <label for="agree"><input type="checkbox" name="agree" id="agree"> Tôi đồng ý với các điều khoản & điều kiện</label>
+                    </div>
+                    <p class="validation-message">{{ password_error }}</p>
+                    <button type="submit" class="btn">Đăng ký</button>
+                    <p id="registerMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn đã có tài khoản? <span class="login-link">Đăng nhập</span></p>
+                    </div>
+                </form>
+                <p class="fail-message">{{ registration_fail | safe}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <section class="lesson" id="lesson">
+        <!-- design embedding youtube video -->
+        <div class="left">
+            <iframe id="videoFrame" src="https://www.youtube.com/embed/0SJE9dYdpps" frameborder="0" allowfullscreen></iframe>
+            <h2 id="lessonTitle">ReactJS là gì?</h2>
+            <p id="lessonDesc">Giới thiệu tổng quan về ReactJS và lý do nên học.</p>
+        </div>
+        <!-- design lesson list -->
+        <div class="right">
+            {% for lesson in lessons %}
+            <div class="name-lesson"
+                 data-video-id="{{ lesson.video_url.split('v=')[-1] }}"
+                 data-title="{{ lesson.name }}"
+                 data-desc="{{ lesson.content }}">
+                {{ loop.index }}. {{ lesson.name }}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    <!-- custom js -->
+    <script src="/static/js/script.js"></script>
+    <script src="/static/js/lesson.js"></script>
+</body>
+</html>

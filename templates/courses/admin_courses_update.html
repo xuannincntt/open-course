@@ -1,0 +1,141 @@
+{% extends './layout/admin_base.html'%}
+{%block style%}
+<link href="{{url_for('static',filename='css/courses/admin_courses_update.css')}}" rel="stylesheet" />
+{%endblock%}
+{% block content %}
+<div class="update-course">
+    <div class="update-course-header align-left">
+        <div class="header-return align-left">
+            <a 
+                href="/admin/courses"
+                class="return-link"
+            >
+                <i class='bx bx-arrow-back return-icon'></i>
+            </a>
+            
+        </div>
+        <div class="header-title align-left">
+            <p class="return-text">Return to courses</p>
+            <h2 class="title-text">Update Course</h2>
+        </div>
+    </div>
+    <div class="update-course-section">
+        <form action="" class="update-course-form" method="PUT">
+            <div class="course-info-section">
+                <div class="form-field course-title-field">
+                    <label for="courseName" class="form-label">
+                        <span class="field-name course-name">Course Name</span>
+                        <input 
+                            type="text"
+                            id="courseName"
+                            name="courseName"
+                            class="form-input course-title-input"
+                            placeholder="Enter the name of your course"
+                        />
+                    </label>
+                    
+                </div>
+                <div class="form-field course-intro-field">
+                    <label for="courseIntro" class="form-label">
+                        <span class="field-name">Course Introduction</span>
+                        <input 
+                            type="text"
+                            id="courseIntro"
+                            name="courseIntro"
+                            class="form-input course-intro-input"
+                            placeholder="Write an introduction to your course"
+                        />
+                    </label>
+                    
+                </div>
+                <div class="form-field course-image-field">
+                    <label for="courseImage" class="form-label">
+                        <span class="field-name">Preview Image for Your Course</span>
+                        <input 
+                            type="file"
+                            id="courseImage"
+                            name="courseImage"
+                            style="display: none;"
+                            accept="image/png, image/jpg, image/jpeg, image/webp"
+                        />
+                        <img 
+                            src="{{url_for('static', filename='images/course_placeholder.svg')}}" 
+                            alt="course introduction image" 
+                            class="course-image-preview"
+                        />
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label for="numOfLessons" class="form-label">
+                        <span class="field-name">Number of Lessons (expected)</span>
+                        <input 
+                            type="number"
+                            id="numOfLessons"
+                            name="numOfLessons"
+                            class="form-input"
+                            placeholder="How many lessons is this course expected to have?"
+                        />
+                    </label>
+                </div>
+                <div class="form-field course-category-field">
+                    <label for="courseCategory" class="form-label">
+                        <span class="field-name">Category</span>
+                        <select 
+                            name="courseCategory" 
+                            id="courseCategory"
+                            class="select-input course-category-input"
+                        >
+                            <option value="">Select course category</option>
+                        </select>
+                    </label>
+                </div>
+                
+                <div class="form-field">
+                    <label for="courseLevel" class="form-label">
+                        <span class="field-name">Level</span>
+                        <select 
+                            name="courseLevel" 
+                            id="courseLevel"
+                            class="select-input course-level-input"
+                        >
+                            <option value="">Choose course level</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="form-field course-desc-field">
+                    <label for="courseDescription" class="form-label">
+                        <span class="field-name">Description</span>
+                        <p>Write some description of the course like:</p>
+                        <p>- What are the requirements for this course?</p>
+                        <p>- What are the learning objectives of this course?</p>
+                        <p>- What are the main concepts or topics covered in this course?"</p>
+                        </span>
+                        <textarea 
+                            id="courseDescription"
+                            name="courseDescription"
+                            class="form-input course-desc-input"
+                            cols="100" 
+                            rows="7"
+                            placeholder=""
+                        >
+                            
+                        </textarea>
+                    </label>
+                </div>
+            </div>
+            <div class="course-submit-section align-center">
+                <button type="submit" class="submit-btn align-center">
+                    <span class="submit-course-btnTitle">Update Course</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{%block javascript%}
+<script type="module" src="{{url_for('static', filename='js/courses/admin_courses_update.js')}}"></script>
+{%endblock%}

@@ -1,0 +1,438 @@
+.detail {
+    display: flex;
+    gap: 3rem;
+    flex-direction: row;
+    min-height: auto;
+}
+
+.detail-intro {
+    width: 25%;
+    position: sticky;
+    top: 10rem;
+    align-self: flex-start;
+    min-height: auto;
+    border: 1px solid var(--text-color);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .1);
+}
+
+.detail-intro img {
+    width: 100%;
+}
+
+.detail-intro .detail-intro-content {
+    padding: 2rem;
+}
+
+.detail-intro .detail-intro-content h1 {
+    font-size: 2.7rem;
+    padding-bottom: 1.2rem;
+}
+
+.detail-intro .detail-intro-content button {
+    color: white;
+    display: block;
+    font-size: 1.7rem;
+    width: 100%;
+    background-color: var(--main-color);
+    padding: 1.3rem;
+    text-align: center;
+    border-radius: .5rem;
+    cursor: pointer;
+}
+
+.detail-intro .detail-intro-content h3 {
+    font-size: 2rem;
+    padding: 2rem 0 1.5rem;
+}
+
+.detail-intro .detail-intro-content p {
+    font-size: 1.5rem;
+    padding-bottom: 1rem;
+}
+
+.rating-box {
+    width: 100%;
+}
+
+.rating-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 1rem 0 1.5rem;
+}
+
+.average-rating {
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.average-rating i {
+    color: #f69c08;
+    margin: 0 .5rem .3rem 0;
+    font-size: 2rem;
+}
+
+.total-reviews {
+    font-size: 1.5rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+    margin-top: .5rem;
+}
+
+.star-row {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+}
+
+.star-label {
+    width: 60px;
+    font-size: 1.5rem;
+}
+
+.bar-container {
+    flex: 1;
+    height: 10px;
+    background-color: #eee;
+    margin: 0 8px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background-color: var(--main-color);
+}
+
+.percentage {
+    width: 50px;
+    text-align: right;
+    font-size: 1.4rem;
+}
+
+.detail-content {
+    width: 75%;
+    min-height: auto;
+    border: 1px solid var(--text-color);
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .1);
+    padding: 2rem 3rem;
+}
+
+.detail-content h1 {
+    font-size: 3rem;
+}
+
+.detail-content p {
+    font-size: 1.5rem;
+    padding: 1rem 0;
+}
+
+.detail-content p i {
+    color: var(--main-color);
+}
+
+.detail-content h3 {
+    font-size: 2rem;
+    padding: 1rem 0;
+}
+
+.detail-content-result {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    font-size: 1.5rem;
+}
+
+.detail-content-result p {
+    flex: 0 0 50%;
+}
+
+.course-outline {
+    width: 100%;
+}
+
+.outline-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    color: #6b6f76;
+    margin-bottom: 15px;
+}
+
+.outline-header h2 {
+    flex: 100%;
+    margin: 1rem 0;
+    font-size: 2rem;
+    color: #000;
+}
+
+.outline-header p {
+    font-size: 1.5rem;
+    flex: 1;
+}
+
+.toggle-all {
+    font-size: 1.5rem;
+    color: var(--main-color);
+    text-decoration: none;
+}
+
+.section {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background-color: #fafafa;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    background-color: #f3f3f3;
+}
+
+.section-header h3 {
+    margin: 0;
+    flex: 1;
+}
+
+.section-header p {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #555;
+}
+
+.section-header #chevron {
+    margin-right: 10px;
+    font-size: 2rem;
+    transition: transform 0.2s;
+}
+
+.section.open #chevron {
+    transform: rotate(180deg);
+}
+
+.section-content {
+    display: none;
+    padding: 10px 20px;
+    background: #fff;
+}
+
+.section.open .section-content {
+    display: block;
+}
+
+.section-content ul {
+    margin: 0;
+    padding: 15px 20px 0;
+    list-style-type: none;
+}
+
+.section-content ul i {
+    padding-right: .8rem;
+    align-items: center;
+}
+
+.section-content ul li {
+    font-size: 1.5rem;
+    padding-bottom: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.more-section {
+    display: block;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #fff;
+    border: 2px solid var(--main-color);
+    color: var(--main-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.review {
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+  }
+.review-header {
+    display: flex;
+    align-items: center;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+.user-info {
+    font-weight: bold;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.stars {
+    color: #f69c08;
+}
+.time {
+    color: gray;
+    font-size: 1.5rem;
+    margin-left: 10px;
+}
+.review-content {
+    margin: 2rem 0;
+    font-size: 1.5rem;
+}
+.helpful {
+    font-size: 1.5rem;
+    color: gray;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.reply {
+    background-color: #f8f9fa;
+    padding: 10px;
+    margin-top: 10px;
+    border-left: 3px solid #ccc;
+    font-size: 1.5rem;
+}
+  .reply strong {
+    display: block;
+    color: #444;
+    margin-bottom: 5px;
+  }
+
+.recommendation-course-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+}
+
+.recommendation-course-container .recommendation-course-box {
+    position: relative;
+    border-radius: 1rem;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .1);
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: .5s ease;
+    cursor: pointer;
+}
+
+.recommendation-course-box img {
+    width: 100%;
+    transition: .5s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.recommendation-course-box:hover {
+    border-color: var(--main-color);
+    box-shadow: 0 .1rem 2rem var(--shadow-color);
+    transform: scale(1.02);
+}
+
+.recommendation-course-inf {
+    position: absolute;
+    display: flex;
+    top: 5%;
+    right: 5%;
+    font-size: 1.5rem;
+}
+
+.recommendation-course-inf .time {
+    padding: 1rem 1.5rem;
+    letter-spacing: .1rem;
+    background: var(--bg-color);
+    margin-right: 1rem;
+    color: var(--text-color);
+    border-radius: 4rem;
+}
+
+.recommendation-course-inf .time i {
+    margin-right: .5rem;
+}
+
+.recommendation-course-inf .price {
+    padding: 1rem 1.5rem;
+    letter-spacing: .1rem;
+    background: var(--main-color);
+    color: var(--bg-color);
+    border-radius: 4rem;
+}
+
+.recommendation-course-inf .price i {
+    margin-right: .5rem;
+}
+
+.recommendation-course-layer h4 {
+    font-size: 2rem;
+    padding: 1.5rem;
+    color: var(--text-color);
+}
+
+.recommendation-course-layer p {
+    font-size: 1.5rem;
+    padding: 0 1.5rem;
+    color: var(--second-text-color);
+}
+
+.recommendation-course-end {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem;
+}
+
+.recommendation-course-end img {
+    width: 4rem;
+    height: 4rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: .1rem solid var(--bg-color);
+    outline: .1rem solid var(--main-color);
+}
+
+.recommendation-course-end p {
+    margin-left: 1rem;
+    margin-right: auto;
+    align-items: center;
+    color: var(--text-color);
+    font-weight: bold;
+    padding: 0rem;
+}
+
+.recommendation-course-end a {
+    background: var(--bg-color);
+    box-shadow: 0 .1rem .5rem var(--shadow-color);
+    padding: 1.2rem 1.5rem;
+    border-radius: 4rem;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    transition: .5s ease;
+}
+
+.recommendation-course-end a:hover {
+    background: var(--main-color);
+    color: var(--bg-color);
+}

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course_name }}</title>
+    <link rel="icon" href="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743407933/wnfmvxozfojo9seoywjb.png">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/detail.css">
+
+    <!-- swiper css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+    <!-- box icon -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- header design -->
+    <header class="header">
+        <a href="/" class="logo"><i class='bx bx-book-bookmark'></i> EducationX</a>
+        <nav class="navbar">
+            <a href="/">Trang chủ</a>
+            <a href="/course">Khóa học</a>
+            <a href="/teacher">Giảng viên</a>
+            <a href="/contact">Liên hệ</a>
+        </nav>
+        {% if loggedin %}
+            <div class="dropdown">
+                <p id="name-user">{{ username }}</p>
+                <p><img src="{{ avatar }}" alt="" class="icon-user"></p>
+                <i class='bx bx-chevron-down' id="dropdown"></i>
+            </div>
+            <div class="user-inf">
+                <a href="/{{ username }}"><p>Trang cá nhân</p></a>
+                <a href="/admin"><p>Quản lý</p></a>
+                <hr>
+                <a href="#"><p>Yêu thích</p></a>
+                <a href="#"><p>Bài viết của tôi</p></a>
+                <a href="#"><p>Bài viết đã lưu</p></a>
+                <hr>
+                <a href="/{{ username }}/edit"><p>Cài đặt</p></a>
+                <a href="/logout" onclick="logout()"><p>Đăng xuất</p></a>
+            </div>
+        {% else %}
+            <p id="signup">Đăng ký</p> 
+            <p id="login">Đăng nhập</p>
+        {% endif %}
+        <div class="bx bx-menu" id="menu-icon"></div>
+    </header>
+
+    <!-- popup section design -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closeLoginPopup()">
+        <div class="wrapper" id="wrapperPopup" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeLoginPopup()"><i class='bx bx-x'></i></span>
+            <div class="form-box login">
+                <h2>Đăng nhập</h2>
+                <form id="loginForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="email" placeholder="Email">
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt' ></i></span>
+                        <input type="password" name="password" id="password" placeholder="Mật khẩu">
+                    </div>
+                    <div class="remember-forgot">
+                        <label for="checkbox"><input type="checkbox" name="checkbox" id="checkbox"> Lưu thông tin</label>
+                        <p class="forgotPass">Quên mật khẩu?</p>
+                    </div>
+                    <button type="submit" class="btn">Đăng nhập</button>
+                    <p id="loginMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn chưa có tài khoản? <span class="register-link">Đăng ký</span></p>
+                    </div>
+                </form>
+            </div>
+            <div class="form-box register">
+                <h2>Đăng ký</h2>
+                <form id="registerForm">
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-user'></i></span>
+                        <input type="text" name="username" id="registerName" placeholder="Họ tên">
+                    </div>
+                    <p class="validation-message">{{ username_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-envelope'></i></span>
+                        <input type="email" name="email" id="registerEmail" placeholder="Email">
+                    </div>
+                    <p class="validation-message">{{ email_error }}</p>
+                    <div class="input-box">
+                        <span class="icon"><i class='bx bxs-lock-alt'></i></span>
+                        <input type="password" name="password" id="registerPassword" placeholder="Mật khẩu">
+                    </div>
+                    <div class="input-box">
+                        <select name="role" id="registerRole">
+                            <option value="" disabled selected>Chọn vai trò</option>
+                            <option value="STUDENT">Học viên</option>
+                            <option value="TEACHER">Giáo viên</option>
+                        </select>
+                    </div>
+                    <p class="validation-message">{{ role_error }}</p>                    
+                    <div class="remember-forgot">
+                        <label for="agree"><input type="checkbox" name="agree" id="agree"> Tôi đồng ý với các điều khoản & điều kiện</label>
+                    </div>
+                    <p class="validation-message">{{ password_error }}</p>
+                    <button type="submit" class="btn">Đăng ký</button>
+                    <p id="registerMessage"></p>
+                    <div class="login-register">
+                        <p>Bạn đã có tài khoản? <span class="login-link">Đăng nhập</span></p>
+                    </div>
+                </form>
+                <p class="fail-message">{{ registration_fail | safe}}</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="detail" id="detail">
+        <div class="detail-intro">
+            <img src="{{ course_img }}" alt="">
+            <div class="detail-intro-content">
+                <h1>Miễn phí</h1>
+                <button class="btn-lesson">Đăng ký ngay</button>
+                <h3>Khóa học này bao gồm:</h3>
+                <p><i class='bx bx-slideshow'></i> 13,5 giờ video theo yêu cầu</p>
+                <p><i class='bx bx-file' ></i> 8 bài viết</p>
+                <p><i class='bx bx-time-five' ></i> Quyền truy cập đầy đủ suốt đời</p>
+                <p><i class='bx bx-current-location' ></i> Giấy chứng nhận hoàn thành</p>
+                <div class="rating-box">
+                    <div class="rating-title">Đánh giá của người học</div>
+                    <div class="average-rating">
+                        <i class='bx bxs-star'></i> <span>4.6</span>
+                    </div>
+                    <div class="total-reviews">40.869 đánh giá</div>
+                  
+                    <div class="star-row">
+                        <div class="star-label">5 stars</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 72.03%;"></div>
+                        </div>
+                        <div class="percentage">72,03%</div>
+                    </div>
+                  
+                    <div class="star-row">
+                        <div class="star-label">4 stars</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 20.71%;"></div>
+                        </div>
+                        <div class="percentage">20,71%</div>
+                    </div>
+                  
+                    <div class="star-row">
+                        <div class="star-label">3 stars</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 4.40%;"></div>
+                        </div>
+                        <div class="percentage">4,40%</div>
+                    </div>
+                  
+                    <div class="star-row">
+                        <div class="star-label">2 stars</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 1.44%;"></div>
+                        </div>
+                        <div class="percentage">1,44%</div>
+                    </div>
+                  
+                    <div class="star-row">
+                        <div class="star-label">1 star</div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: 1.38%;"></div>
+                        </div>
+                        <div class="percentage">1,38%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="detail-content">
+            <h1>{{ course_name }}</h1>
+            <p>Để có cái nhìn tổng quan về ngành IT - 
+                Lập trình web các bạn nên xem các videos tại khóa này trước nhé.</p>
+            <h3>Bạn sẽ học được gì?</h3>
+            <div class="detail-content-result">
+                <p><i class='bx bx-check'></i> Các kiến thức cơ bản, nền móng của ngành IT</p>
+                <p><i class='bx bx-check'></i> Nâng cao tư duy với các bài kiểm tra với testcases</p>
+                <p><i class='bx bx-check'></i> Tự tin khi phỏng vấn với kiến thức vững chắc</p>
+                <p><i class='bx bx-check'></i> Thành thạo DOM APIs để tương tác với trang web</p>
+                <p><i class='bx bx-check'></i> Các bài thực hành như Tabs, Music Player</p>
+            </div>
+            <div class="course-outline">
+                <div class="outline-header">
+                    <h2>Nội dung khóa học</h2>
+                    <p>29 phần • 119 bài giảng • 13 giờ 18 phút tổng thời lượng</p>
+                    <a href="#" class="toggle-all">Mở rộng tất cả các phần</a>
+                </div>
+            
+                <div class="section-list">
+                    <!-- Một phần -->
+                    <div class="section">
+                        <div class="section-header">
+                            <i class='bx bx-chevron-down' id="chevron"></i>
+                            <h3>Giới thiệu</h3>
+                            <p>3 bài giảng • 7 phút</p>
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 1: Giới thiệu khóa học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 2: Mục tiêu học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 3: Tổng quan nội dung</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">
+                            <i class='bx bx-chevron-down' id="chevron"></i>
+                            <h3>Cài đặt môi trường lập trình</h3>
+                            <p>3 bài giảng • 7 phút</p>
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 1: Giới thiệu khóa học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 2: Mục tiêu học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 3: Tổng quan nội dung</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">
+                            <i class='bx bx-chevron-down' id="chevron"></i>
+                            <h3>Biến và kiểu dữ liệu (Variable and Data types)</h3>
+                            <p>3 bài giảng • 7 phút</p>
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 1: Giới thiệu khóa học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 2: Mục tiêu học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 3: Tổng quan nội dung</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="section-header">
+                            <i class='bx bx-chevron-down' id="chevron"></i>
+                            <h3>Các phép toán số học (Arithmetic operators)</h3>
+                            <p>3 bài giảng • 7 phút</p>
+                        </div>
+                        <div class="section-content">
+                            <ul>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 1: Giới thiệu khóa học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 2: Mục tiêu học</li>
+                                <li><i class='bx bx-movie-play' ></i> Bài giảng 3: Tổng quan nội dung</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <button class="more-section">19 phần nữa</button>
+            </div>
+            <h3>Đánh giá khóa học</h3>
+            <div class="review">
+                <div class="review-header">
+                    <div class="avatar">VH</div>
+                    <div class="user-info">Vo Tan H. 
+                        <span class="stars">★★★★★ <span class="time">2 tuần trước</span></span>
+                    </div>
+                </div>
+                <div class="review-content">
+                  Thiếu nhiều kiến thức so với mô tả
+                </div>
+                <div class="helpful">Bạn thấy hữu ích?
+                    <i class='bx bx-like'></i> <i class='bx bx-dislike' ></i> <i class='bx bx-message-dots' ></i>
+                </div>
+                <div class="reply">
+                    <strong>Al Coding — Phản hồi của giảng viên • 1 tuần trước</strong>
+                    Cảm ơn bạn nhiều. Chúc bạn một ngày tốt lành. Mình mới có big update rồi nha bạn, bạn vào học tiếp nha.
+                </div>
+            </div>
+            
+            <div class="review">
+                <div class="review-header">
+                    <div class="avatar">HG</div>
+                    <div class="user-info">Huỳnh G. 
+                        <span class="stars">★★★★☆ <span class="time">1 tháng trước</span></span>
+                    </div>
+                </div>
+                <div class="review-content">
+                    Good course
+                </div>
+                <div class="helpful">Bạn thấy hữu ích?
+                    <i class='bx bx-like'></i> <i class='bx bx-dislike' ></i> <i class='bx bx-message-dots' ></i>
+                </div>
+                <div class="reply">
+                    <strong>Al Coding — Phản hồi của giảng viên • 1 tháng trước</strong>
+                    Cảm ơn bạn nhiều đã ủng hộ AI Coding ạ. Chúc bạn mọi ngày vui vẻ và thành công. Bạn có góp ý nào thêm để mình cải thiện không ạ?
+                </div>
+            </div>
+            <button class="more-section">Hiện tất cả đánh giá</button>
+            <h3>Khóa học đề xuất</h3>
+            <div class="recommendation-course-container">
+                <div class="recommendation-course-box">
+                    <img src="https://files.fullstack.edu.vn/f8-prod/courses/15/62f13d2424a47.png" alt="">
+                    <div class="recommendation-course-inf">
+                        <div class="time">
+                            <h5><i class='bx bxs-user'></i> 1</h5>
+                        </div>
+                        <div class="price">
+                            <h5><i class='bx bxs-book'></i> 10</h5>
+                        </div>
+                    </div>
+                    <div class="recommendation-course-layer">
+                        <h4>HTML, CSS, Pro</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                        <div class="recommendation-course-end">
+                            <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743412801/xzcj4oza387tbujbevnn.jpg" alt="">
+                            <p>Lê Kim Anh</p>
+                            <a href="#">Đăng ký ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="recommendation-course-box">
+                    <img src="https://files.fullstack.edu.vn/f8-prod/courses/19/66aa28194b52b.png" alt="">
+                    <div class="recommendation-course-inf">
+                        <div class="time">
+                            <h5><i class='bx bxs-user'></i> 1</h5>
+                        </div>
+                        <div class="price">
+                            <h5><i class='bx bxs-book'></i> 10</h5>
+                        </div>
+                    </div>
+                    <div class="recommendation-course-layer">
+                        <h4>JavaScript Pro</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                        <div class="recommendation-course-end">
+                            <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743412801/xzcj4oza387tbujbevnn.jpg" alt="">
+                            <p>Đàm Thảo Vi</p>
+                            <a href="#">Đăng ký ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="recommendation-course-box">
+                    <img src="https://files.fullstack.edu.vn/f8-prod/courses/27/64e184ee5d7a2.png" alt="">
+                    <div class="recommendation-course-inf">
+                        <div class="time">
+                            <h5><i class='bx bxs-user'></i> 1</h5>
+                        </div>
+                        <div class="price">
+                            <h5><i class='bx bxs-book'></i> 10</h5>
+                        </div>
+                    </div>
+                    <div class="recommendation-course-layer">
+                        <h4>Ngôn ngữ Sass</h4>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. In tenetur voluptates culpa fuga possimus!</p>
+                        <div class="recommendation-course-end">
+                            <img src="https://res.cloudinary.com/dtlz0jfb6/image/upload/v1743412801/xzcj4oza387tbujbevnn.jpg" alt="">
+                            <p>Vũ Xuân Nin</p>
+                            <a href="#">Đăng ký ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer section design -->
+    <footer class="footer">
+        <div class="footer-name">
+            <a href="#" class="logo"><i class='bx bx-book-bookmark'></i> Education X</a>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                Similique magni omnis laudantium sequi!</p>
+        </div>
+        <div class="footer-contain">
+            <div class="footer-box">
+                <i class='bx bx-envelope' ></i>
+                <h2>Subscribe to our newsletter</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Quidem beatae maxime necessitatibus aut repellendus aliquid.</p>
+                <textarea name="" id="" cols="30" rows="8" placeholder="Your Message"></textarea>
+                <input type="submit" value="Send Message" class="btn">
+            </div>
+            <div class="footer-box">
+                <h2>Pages</h2>
+            </div>
+            <div class="footer-box">
+                <p>Home</p>
+            </div>
+            <div class="footer-box">
+                <p>About</p>
+            </div>
+            <div class="footer-box">
+                <p>Courses</p>
+            </div>
+            <div class="footer-box">
+                <p>Individual Course</p>
+            </div>
+            <div class="footer-box">
+                <p>Resourse Center</p>
+            </div>
+            <div class="footer-box">
+                <p>Blog Post</p>
+            </div>
+            <div class="footer-box">
+                <p>Event</p>
+            </div>
+            <div class="footer-box">
+                <p>Individual Event</p>
+            </div>
+            <div class="footer-box">
+                <p>Teachers</p>
+            </div>
+            <div class="footer-box">
+                <p>Individual Teacher</p>
+            </div>
+            <div class="footer-box">
+                <p>Contact</p>
+            </div>
+            <div class="footer-box">
+                <h2>Utility pages</h2>
+            </div>
+            <div class="footer-box">
+                <p>Start Here</p>
+            </div>
+            <div class="footer-box">
+                <p>Styleguide</p>
+            </div>
+            <div class="footer-box">
+                <p>404 Not Found</p>
+            </div>
+            <div class="footer-box">
+                <p>Password Protected</p>
+            </div>
+            <div class="footer-box">
+                <p>Licenses</p>
+            </div>
+            <div class="footer-box">
+                <p>Changelog</p>
+            </div>
+        </div>
+        <div class="footer-end">
+            <div class="footer-text">
+                <p>Copyright &copy; Education X | Designed by BRIX Templates - Powered by Nin</p>
+            </div>
+            <div class="footer-iconTop">
+                <a href="#"><i class='bx bxl-facebook'></i></a>
+                <a href="#"><i class='bx bxl-twitter'></i></a>
+                <a href="#"><i class='bx bxl-instagram-alt'></i></a>
+                <a href="#"><i class='bx bxl-linkedin'></i></a>
+                <a href="#"><i class='bx bxl-youtube'></i></a>
+                <a href="#"><i class='bx bxs-phone'></i></a>
+            </div>
+        </div>
+    </footer>
+    <script src="/static/js/detail.js"></script>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
