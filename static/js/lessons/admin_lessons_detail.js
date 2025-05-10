@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lessonName = document.getElementById("lesson-name");
     const lessonContent = document.getElementById("lesson-video");
     const lessonVideo = document.getElementById("lesson-video");
+    const lessonYoutube = document.getElementById("lesson-youtube");
     const pathParts = window.location.pathname.split('/');
     const lessonId = pathParts[pathParts.length - 1];
     console.log(lessonId);
@@ -28,7 +29,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     courseName.textContent = selectedLesson.courseName;
     lessonName.textContent = selectedLesson.name;
     lessonContent.textContent = selectedLesson.content;
-    lessonVideo.src=selectedLesson.video_url;
-    lessonVideo.style.display="block";
+
+    const lessonVideoUrl = selectedLesson.video_url;
+    if (lessonVideoUrl.includes("youtube")){
+        lessonYoutube.src=lessonVideoUrl;
+        lessonYoutube.style.display="block";
+    }
+    else {
+        lessonVideo.src=selectedLesson.video_url;
+        lessonVideo.style.display="block";
+    }
 
 });

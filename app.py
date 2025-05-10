@@ -85,9 +85,9 @@ def popular():
 def course():
     keyword = request.args.get("keyword", "").strip().lower()
     # Tìm khóa học theo keyword (nếu có)
-    query = Course.query
+    query = Course.query.filter(Course.status=="Published")
     if keyword:
-        query = query.filter(Course.name.ilike(f"%{keyword}%"), Course.status=="Published")
+        query = query.filter(Course.name.ilike(f"%{keyword}%"))
     courses = query.all()
     course_list = []
     for course in courses:
@@ -429,7 +429,7 @@ def admin():
         if not selected_user or selected_user.role not in ["TEACHER","ADMIN"]:
             return redirect("/")
         
-        html_resp = render_template("admin_home.html", username=selected_user.name)
+        html_resp = render_template("admin_home.html", username=selected_user.name, avatar=selected_user.avatar)
         resp = make_response(html_resp)
         resp.set_cookie("username", selected_user.name, max_age=3600*24)
         resp.set_cookie("user_id", str(selected_user.id), max_age=3600*24)
@@ -442,36 +442,52 @@ def admin():
 @app.route("/admin/courses", methods=["GET", "POST"])
 def courses_page(): 
     username = request.cookies.get("username")
-    return render_template("admin_courses.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("admin_courses.html", username=username, avatar=selected_user.avatar)
 
 @app.route("/admin/courses/<int:id>", methods=["GET"])
 def detail_course_page(id):
     username = request.cookies.get("username")
-    return render_template("courses/admin_courses_detail.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("courses/admin_courses_detail.html", username=username, avatar=selected_user.avatar)
 @app.route("/admin/courses/new", methods=["GET"])
 def add_course_page():
     username = request.cookies.get("username")
-    return render_template("courses/admin_courses_create.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("courses/admin_courses_create.html", username=username, avatar=selected_user.avatar)
 @app.route("/admin/courses/update/<int:id>", methods=["GET"])
 def update_course_page(id):
     username = request.cookies.get("username")
-    return render_template("courses/admin_courses_update.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("courses/admin_courses_update.html", username=username, avatar=selected_user.avatar)
 @app.route("/admin/lessons", methods=["GET"])
 def lessons_page(): 
     username = request.cookies.get("username")
-    return render_template("admin_lessons.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("admin_lessons.html", username=username, avatar=selected_user.avatar)
 @app.route("/admin/lessons/<int:id>", methods=["GET"])
 def detail_lesson_page(id): 
     username = request.cookies.get("username")
-    return render_template("lessons/admin_lessons_detail.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("lessons/admin_lessons_detail.html", username=username, avatar=selected_user.avatar)
 @app.route("/admin/lessons/new", methods=["GET"])
 def add_lesson_page(): 
     username = request.cookies.get("username")
-    return render_template("lessons/admin_lessons_create.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("lessons/admin_lessons_create.html", username=username, avatar=selected_user.avatar)
 @app.route("/admin/lessons/update/<int:id>", methods=["GET"])
 def update_lesson_page(id): 
     username = request.cookies.get("username")
-    return render_template("lessons/admin_lessons_update.html", username=username)
+    user_id = request.cookies.get("user_id","")
+    selected_user = User.query.get_or_404(user_id)
+    return render_template("lessons/admin_lessons_update.html", username=username, avatar=selected_user.avatar)
 @app.route("/api/admin/courses", methods=["GET"])
 def get_courses():
     user_id = request.cookies.get("user_id", "")
@@ -609,11 +625,17 @@ def add_course():
             lesson_name = request.form.get(f'lessons[{i}][name]')
             lesson_content = request.form.get(f'lessons[{i}][content]')
             lesson_video = request.files.get(f'lessons[{i}][video]', None)
+            lesson_youtube = request.form.get(f'lessons[{i}][youtube]','')
+
             lesson_video_url = ""
             # Thêm logic xử lý gửi video lên cloudinary sau đó nhận url về và thêm vào
             if lesson_video:
                 response = cloudinary.uploader.upload(lesson_video, resource_type='video')
                 lesson_video_url = response['secure_url']
+            
+            else: 
+                lesson_video_url = lesson_youtube
+
             new_lesson = Lesson(
                 name=lesson_name,
                 content=lesson_content,
@@ -819,7 +841,7 @@ def get_lessons():
         print(lessons)
         if not lessons:
             return jsonify({
-                "message": "No courses found"
+                "message": "No lessons found"
             }), 404
         lessons_dict = [lesson.to_dict() for lesson in lessons]
         def map_course_from_lesson(lesson):

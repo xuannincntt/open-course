@@ -1,3 +1,5 @@
+import categoriesTranslation from "./categoriesTranslation.js";
+
 let allCourses = [];
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -62,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
         categories.forEach(cat => {
             const catBtn = document.createElement("a");
             catBtn.href = "#";
-            catBtn.textContent = cat.name;
+            catBtn.textContent = categoriesTranslation[cat.name];
             catBtn.addEventListener("click", () => {
                 document.querySelectorAll(".branch-list-item a").forEach(a => a.classList.remove("active"));
                 catBtn.classList.add("active");

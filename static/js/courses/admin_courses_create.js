@@ -57,6 +57,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </label>
                         
                     </div>
+                    <h3 class="align-center">Or</h3>
+                    <div class="form-field lesson-youtube-field">
+                        <label for="lessonYoutube_${numberOfLessons}" class="form-label">
+                            <span class="field-name lesson-video">Youtube URL of Lesson</span>
+                            <input 
+                                type="text"
+                                id="lessonYoutube_${numberOfLessons}"
+                                name="lessonYoutube_${numberOfLessons}"
+                                class="form-input lesson-youtube-input"
+                                placeholder="Youtube URL"
+                            />
+                            <!-- <video 
+                                id="lesson-video-preview" 
+                                style="display: none;"
+                                controls 
+                                width="100%">
+                            </video> -->
+                            <iframe frameborder="0" allowfullscreen
+                                id="lesson-youtube-preview" 
+                                style="display: none;"
+                                controls 
+                                width="100%"
+                                height="450px"
+                                src="">
+
+                            </iframe>
+                        </label>
+                        
+                    </div>
                     <div class="form-field lesson-content-field">
                         <label for="lessonContent_${numberOfLessons}" class="form-label">
                             <span class="field-name lesson-name">Lesson Content</span>
@@ -73,6 +102,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         
                     </div>`
     lessonContainer.insertAdjacentHTML('beforeend', newLesson);
+    handleVideoInput();
+    handleYoutubeInput();
 });
 
 imageInput.addEventListener('change', function () {
@@ -123,6 +154,35 @@ addLessonBtn.addEventListener('click',  () => {
                         </label>
                         
                     </div>
+                    <h3 class="align-center">Or</h3>
+                    <div class="form-field lesson-youtube-field">
+                        <label for="lessonYoutube_${numberOfLessons}" class="form-label">
+                            <span class="field-name lesson-video">Youtube URL of Lesson</span>
+                            <input 
+                                type="text"
+                                id="lessonYoutube_${numberOfLessons}"
+                                name="lessonYoutube_${numberOfLessons}"
+                                class="form-input lesson-youtube-input"
+                                placeholder="Youtube URL"
+                            />
+                            <!-- <video 
+                                id="lesson-video-preview" 
+                                style="display: none;"
+                                controls 
+                                width="100%">
+                            </video> -->
+                            <iframe frameborder="0" allowfullscreen
+                                id="lesson-youtube-preview" 
+                                style="display: none;"
+                                controls 
+                                width="100%"
+                                height="450px"
+                                src="">
+
+                            </iframe>
+                        </label>
+                        
+                    </div>
                     <div class="form-field lesson-content-field">
                         <label for="lessonContent_${numberOfLessons}" class="form-label">
                             <span class="field-name lesson-name">Lesson Content</span>
@@ -139,6 +199,8 @@ addLessonBtn.addEventListener('click',  () => {
                         
                     </div>`
     lessonContainer.insertAdjacentHTML('beforeend', newLesson);
+    handleVideoInput();
+    handleYoutubeInput();
 });
 
 const updateLessonOrder = () => {
@@ -155,10 +217,16 @@ const updateLessonOrder = () => {
         lesson.querySelector('.lesson-video-input').name = `lessonVideo_${newIndex}`;
         lesson.querySelectorAll('.form-label')[1].htmlFor = `lessonVideo_${newIndex}`;
 
+        lesson.querySelector('.lesson-youtube-input').id = `lessonYoutube_${newIndex}`;
+        lesson.querySelector('.lesson-youtube-input').name = `lessonYoutube_${newIndex}`;
+        lesson.querySelectorAll('.form-label')[1].htmlFor = `lessonYoutube_${newIndex}`;
+
         lesson.querySelector('.lesson-content-input').id = `lessonContent_${newIndex}`;
         lesson.querySelector('.lesson-content-input').name = `lessonContent_${newIndex}`;
         lesson.querySelectorAll('.form-label')[2].htmlFor = `lessonContent_${newIndex}`;
     });
+    handleVideoInput();
+    handleYoutubeInput();
 };
 
 const handleDeleteLesson = (e) => {
@@ -200,10 +268,15 @@ addCourseForm.addEventListener('submit', (e) => {
         if (addCourseForm.elements[`lessonVideo_${i}`].files){
             video = addCourseForm.elements[`lessonVideo_${i}`].files[0]
         }
+        let youtube = "";
+        if (addCourseForm.elements[`lessonYoutube_${numberOfLessons}`].value){
+            youtube = addCourseForm.elements[`lessonYoutube_${numberOfLessons}`].value;
+        }
         const content = addCourseForm.elements[`lessonContent_${i}`].value;
 
         formData.append(`lessons[${i}][name]`, name);
         formData.append(`lessons[${i}][video]`, video || null);
+        formData.append(`lessons[${i}][youtube]`, youtube);
         formData.append(`lessons[${i}][content]`, content);
     }
 
@@ -225,6 +298,34 @@ addCourseForm.addEventListener('submit', (e) => {
 });
 
 
-const validateAddCourseForm = () => {
+const handleYoutubeInput = () => {
+    const youtubeInputs = document.querySelectorAll(".lesson-youtube-input");
+    console.log(youtubeInputs);
+    youtubeInputs.forEach(input => {
+        input.addEventListener("input", (e) => {
+            const youtubeUrl = e.target.value;
+            const iframeTag = input.nextElementSibling;
+            console.log(iframeTag);
+            iframeTag.src=youtubeUrl;
+            iframeTag.style.display="block";
 
-}
+        });
+    });
+};
+
+const handleVideoInput = () => {
+    const videoInputs = document.querySelectorAll(".lesson-video-input");
+    console.log(videoInputs);
+    videoInputs.forEach(input => {
+        input.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const videoPreview = input.nextElementSibling;
+                console.log(videoPreview);
+                const url = URL.createObjectURL(file);
+                videoPreview.src = url;
+                videoPreview.style.display="block";
+            }
+        });
+    });
+};

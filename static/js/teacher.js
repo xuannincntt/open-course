@@ -1,3 +1,5 @@
+import categoriesTranslation from "./categoriesTranslation.js";
+
 async function loadTeachersAndBranches() {
     try {
         const res = await fetch("/api/teacher");
@@ -46,7 +48,7 @@ async function loadTeachersAndBranches() {
                 const item = document.createElement("a");
                 item.href = "#";
                 const iconClass = iconMap[branch] || "bx bx-book";
-                item.innerHTML = `<i class='${iconClass}'></i> ${branch}`;
+                item.innerHTML = `<i class='${iconClass}'></i> ${categoriesTranslation[branch]}`;
                 item.addEventListener("click", (e) => {
                     e.preventDefault();
                     currentTeachers = teachers.filter(t => t.branch === branch);

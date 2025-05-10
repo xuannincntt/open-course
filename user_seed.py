@@ -10,8 +10,8 @@ sample_users = [{
     "description": ""  
 },
 {
-    "name": "Lê Duy Tân",
-    "email": "leduytan0706@example.com",
+    "name": "Nguyễn Mai Phương",
+    "email": "nmp@example.com",
     "password": "123456",
     "role": "TEACHER",
     "description": ""  

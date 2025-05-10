@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (videoId.includes("youtube")) {
             videoFrame.src = `${videoId}`;
+            console.log(videoId);
             video.style.display = "none";
             videoFrame.style.display = "block";
         } else {

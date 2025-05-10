@@ -49,11 +49,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(lessonVideoUrl.includes("youtube"))
     if (lessonVideoUrl.includes("youtube")){
         lessonYoutubeInput.value = lessonVideoUrl;
-        lessonYoutubePreview.src = lessonVideoUrl
+        lessonYoutubePreview.src = `${lessonVideoUrl}`;
+        lessonYoutubePreview.style.display = "block";
+        lessonVideoPreview.style.display = "none";
+
+        console.log(lessonVideoUrl);
     }
     else {
         lessonVideoPreview.src=selectedLesson.video_url || "";
         lessonVideoPreview.style.display = "block";
+        lessonYoutubePreview.style.display = "none";
     }
     
 

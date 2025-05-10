@@ -1,6 +1,32 @@
 {% extends './layout/admin_base.html'%}
+{% block style %}
+<link href="{{url_for('static',filename='css/admin_home.css')}}" rel="stylesheet" />
+{% endblock %}
 {% block content %}
-<div>
-    <h2>Dashboard</h2>
+<div class="home-page">
+    <div class="home-header">
+        <div class="home-header-title align-left">
+            <h2 class="">Dashboard</h2>
+        </div>
+        <div class="home-navigation align-right">
+            <div class="dashboard-card">
+                <a href="/admin/courses/new" class="navigation-btn add-course-btn align-center">
+                    Thêm khóa học
+                </a>
+            </div>
+            <div  class="dashboard-card">
+                <a href="/admin/lessons/new" class="navigation-btn add-lesson-btn align-center">
+                    Thêm bài học
+                </a>
+            </div>
+            <div  class="dashboard-card">
+                <a href="/" class="navigation-btn back-home-btn align-center">
+                    Về trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+    
 </div>
+
 {% endblock %}

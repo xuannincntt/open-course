@@ -18,7 +18,7 @@ const getCoursesForSelection = async () => {
 
 const getCategoriesForSelection = async () => {
     try {
-        const response = await fetch("/api/admin/categories", {
+        const response = await fetch("/api/category", {
             method: "GET"
         });
         const data = await response.json();
